@@ -1,6 +1,7 @@
 # Local workspace data, credentials, databases and temporary tooling
 /.local/
 /.superpowers/
+/.codex/
 .env
 .env.*
 !.env.example
@@ -17,6 +18,7 @@ secrets.json
 [Bb]in/
 [Oo]bj/
 /artifacts/
+/backend/artifacts/
 /packages/
 **/.nuget/packages/
 *.nupkg
