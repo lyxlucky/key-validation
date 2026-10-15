@@ -35,6 +35,7 @@ async function setup(page: Page) {
     else if (pathname.endsWith('/trial-policy')) data = { isEnabled: false, durationSeconds: 86400, features: [] };
     else if (pathname === '/admin/dashboard') data = { totalLicenses: 0, activatedLicenses: 0, validLicenses: 0, onlineSessions: 0 };
     else if (pathname === '/admin/catalog') data = { applications, plans: [] };
+    else if (pathname === '/integrations/developer-docs') data = [];
     else if (pathname === '/admin/license-batches' && route.request().method() === 'POST') {
       const body = route.request().postDataJSON();
       data = { batch: { id: 'qa-batch', quantity: body.quantity }, licenses: Array.from({ length: body.quantity }, (_, i) => ({ id: `qa-license-${i}`, key: `QA-SYNTHETIC-KEY-${i}` })) };
@@ -131,6 +132,42 @@ test('issuance failure preserves the original request for a retry', async ({ pag
   expect(requests[1]).toEqual(requests[0]);
   await expect(dialog.getByLabel('所属应用', { exact: true })).toBeDisabled();
 });
+
+for (const failure of ['setItem', 'removeItem'] as const) {
+  test(`issuance handles storage ${failure} failure without losing results`, async ({ page }) => {
+    await setup(page);
+    await page.addInitScript(method => {
+      const original = Storage.prototype[method];
+      Storage.prototype[method] = function (key: string, ...args: string[]) {
+        if (key.startsWith('keygate.pendingBatch.')) throw new DOMException('Storage unavailable', 'SecurityError');
+        return Reflect.apply(original, this, [key, ...args]);
+      };
+    }, failure);
+    let posts = 0;
+    await page.route('**/api/admin/license-batches', async route => {
+      if (route.request().method() !== 'POST') return route.fallback();
+      posts++;
+      return route.fallback();
+    });
+    await page.goto('/licenses');
+    await page.getByRole('button', { name: /生成卡密$/ }).click();
+    const dialog = page.getByRole('dialog', { name: '生成卡密', exact: true });
+    await dialog.getByLabel('所属应用', { exact: true }).fill('目标');
+    await page.getByTitle('目标桌面工具', { exact: true }).click();
+    await dialog.getByLabel('卡种', { exact: true }).click();
+    await page.getByTitle('月卡', { exact: true }).click();
+    await dialog.getByRole('button', { name: '确认生成', exact: true }).click();
+    if (failure === 'setItem') {
+      await expect(dialog.getByText(/无法保存待确认请求/)).toBeVisible();
+      await expect(dialog.getByLabel('生成数量', { exact: true })).toBeEnabled();
+      expect(posts).toBe(0);
+    } else {
+      await expect(page.getByRole('dialog', { name: '卡密已生成', exact: true })).toBeVisible();
+      await expect(page.getByTestId('issued-key')).toHaveCount(10);
+      expect(posts).toBe(1);
+    }
+  });
+}
 
 test('application search finds names and codes on later pages', async ({ page }) => {
   await setup(page);

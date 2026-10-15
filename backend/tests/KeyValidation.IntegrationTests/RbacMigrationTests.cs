@@ -63,9 +63,9 @@ public sealed class RbacMigrationTests(ApiFixture fixture) : IClassFixture<ApiFi
                 .ToDictionaryAsync(x => x.LegacyUserId!, x => x.RoleId);
             Assert.Equal(3, converted.Count);
             await migrator.MigrateAsync("20261008135805_OperationsReliability");
-            var downgraded = await db.Users.AsNoTracking().SingleAsync(x => x.Id == restrictedId);
+            var downgraded = await db.Users.FromSqlRaw("""SELECT * FROM "AspNetUsers" """).AsNoTracking().SingleAsync(x => x.Id == restrictedId);
             Assert.True(downgraded.AccessConfigured); Assert.Equal(new[] { "licenses.read" }, downgraded.AccessPermissions);
-            Assert.Empty((await db.Users.AsNoTracking().SingleAsync(x => x.Id == emptyId)).AccessPermissions);
+            Assert.Empty((await db.Users.FromSqlRaw("""SELECT * FROM "AspNetUsers" """).AsNoTracking().SingleAsync(x => x.Id == emptyId)).AccessPermissions);
             await migrator.MigrateAsync();
 
             Assert.False(db.Database.HasPendingModelChanges());

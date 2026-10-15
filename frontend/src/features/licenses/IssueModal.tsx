@@ -27,6 +27,10 @@ function readPending(storageKey: string): BatchRequest | null {
       ? value as BatchRequest : null;
   } catch { return null; }
 }
+function removePending(storageKey: string) {
+  try { sessionStorage.removeItem(storageKey); }
+  catch { /* Storage cleanup must never discard an issuance response or block recovery. */ }
+}
 export function IssueModal({ open, close, applications, applicationsLoading = false, applicationsError = null, retryApplications }: {
   open: boolean; close: () => void; applications: Application[];
   applicationsLoading?: boolean; applicationsError?: Error | null; retryApplications?: () => unknown;
@@ -73,12 +77,13 @@ export function IssueModal({ open, close, applications, applicationsLoading = fa
     if (!pending && (plans.isPending || plans.isError)) return;
     const hadPendingRequest = pending !== null;
     const request: BatchRequest = pending ?? { ...values, requestId: crypto.randomUUID() };
+    try { sessionStorage.setItem(pendingKey, JSON.stringify(request)); }
+    catch { setError('无法保存待确认请求，请允许当前页面使用会话存储后重试。操作尚未发送。'); return; }
     setPending(request);
-    sessionStorage.setItem(pendingKey, JSON.stringify(request));
     setSaving(true); setError(null);
     try {
       const result = await api<Issuance>('/admin/license-batches', { method: 'POST', body: request });
-      sessionStorage.removeItem(pendingKey); setPending(null); setRecovered(null); setSaved(false); setIssued(result);
+      removePending(pendingKey); setPending(null); setRecovered(null); setSaved(false); setIssued(result);
       form.resetFields();
       void Promise.all(['licenses', 'batches', 'dashboard', 'operations-report', 'audit'].map(root => cache.invalidateQueries({ queryKey: [root] })));
     } catch (e) {
@@ -87,7 +92,7 @@ export function IssueModal({ open, close, applications, applicationsLoading = fa
       // retry can be rejected before the server checks the earlier attempt,
       // so that rejection cannot prove the original batch was never committed.
       if (!hadPendingRequest && e instanceof ApiError && ([400, 401, 403, 404, 429].includes(e.status) || e.code === 'APPLICATION_PLAN_DISABLED')) {
-        sessionStorage.removeItem(pendingKey); setPending(null); setRecovered(null);
+        removePending(pendingKey); setPending(null); setRecovered(null);
         if (e.code === 'PLAN_DISABLED' || e.code === 'APPLICATION_PLAN_DISABLED') {
           form.setFieldValue('planId', undefined);
           await invalidatePlanQueries(cache);
@@ -96,7 +101,7 @@ export function IssueModal({ open, close, applications, applicationsLoading = fa
     } finally { setSaving(false); }
   };
   const disableRecovered = () => modal.confirm({ title: '禁用此批次并重新开始？', content: '这会禁用该批次全部卡密并撤销会话。随后可生成新批次。', okText: '确认禁用批次', cancelText: '取消', okButtonProps: { danger: true }, onOk: async () => {
-    try { await api(`/admin/license-batches/${recovered!.id}/disable`, { method: 'POST' }); sessionStorage.removeItem(pendingKey); setPending(null); setRecovered(null); setError(null); await cache.invalidateQueries(); message.success('原批次已禁用，可重新生成'); } catch (e) { message.error((e as Error).message); throw e; }
+    try { await api(`/admin/license-batches/${recovered!.id}/disable`, { method: 'POST' }); removePending(pendingKey); setPending(null); setRecovered(null); setError(null); await cache.invalidateQueries(); message.success('原批次已禁用，可重新生成'); } catch (e) { message.error((e as Error).message); throw e; }
   } });
   function download() {
     if (!issued) return;

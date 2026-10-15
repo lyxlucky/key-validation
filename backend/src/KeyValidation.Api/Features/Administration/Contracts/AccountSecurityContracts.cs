@@ -1,0 +1,24 @@
+using System.Globalization;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
+using KeyValidation.Application;
+using KeyValidation.Domain;
+using KeyValidation.Infrastructure;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+
+namespace KeyValidation.Api;
+public record ChangePasswordRequest(string CurrentPassword, string NewPassword);
+public record PasswordConfirmationRequest(string Password);
+public record TotpCodeRequest(string Code, bool UseRecoveryCode = false);
+public record TwoFactorLoginRequest(string ChallengeToken, string Code, bool UseRecoveryCode = false);
+public record TwoFactorChallengeDto(bool RequiresTwoFactor, string ChallengeToken);
+public record AccountSecurityDto(bool MustChangePassword, bool TwoFactorEnabled, int RecoveryCodesRemaining, DateTimeOffset? VerificationExpiresAt);
+public record TotpSetupDto(string SharedKey, string AuthenticatorUri);
+public record TotpConfirmationDto(string[] RecoveryCodes, UserDto User);
+public record RecoveryCodesDto(string[] RecoveryCodes);

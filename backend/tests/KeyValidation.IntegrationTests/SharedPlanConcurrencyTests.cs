@@ -19,7 +19,7 @@ public sealed class SharedPlanConcurrencyTests(ApiFixture fixture) : IClassFixtu
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         await using var tx = await db.Database.BeginTransactionAsync();
         await db.Database.ExecuteSqlInterpolatedAsync(
-            $"""SELECT "PlanId" FROM "ApplicationPlans" WHERE "ApplicationId" = {app.Id} AND "PlanId" = {plan.Id} FOR UPDATE""");
+            $"""SELECT "PlanId" FROM "t_application_plans" WHERE "ApplicationId" = {app.Id} AND "PlanId" = {plan.Id} FOR UPDATE""");
         var pending = admin.PostAsJsonAsync("/api/admin/license-batches",
             new IssueBatch(app.Id, plan.Id, 1, null, Guid.NewGuid()));
         var waiting = 0;
@@ -29,7 +29,7 @@ public sealed class SharedPlanConcurrencyTests(ApiFixture fixture) : IClassFixtu
             waiting = await db.Database.SqlQueryRaw<int>("""
                 SELECT COUNT(*)::int AS "Value" FROM pg_stat_activity
                 WHERE datname = current_database() AND wait_event_type = 'Lock'
-                AND query LIKE '%ApplicationPlans%'
+                AND query LIKE '%t_application_plans%'
                 """).SingleAsync();
             if (waiting == 0) await Task.Delay(20);
         }

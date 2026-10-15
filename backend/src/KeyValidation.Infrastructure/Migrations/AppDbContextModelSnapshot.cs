@@ -111,7 +111,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("TargetId", "CreatedAt");
 
-                    b.ToTable("AuditLogs", (string)null);
+                    b.ToTable("t_audit_logs", (string)null);
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.ApiCredential", b =>
@@ -158,7 +158,7 @@ namespace KeyValidation.Infrastructure.Migrations
                     b.HasIndex("SecretDigest")
                         .IsUnique();
 
-                    b.ToTable("ApiCredentials");
+                    b.ToTable("t_api_credentials");
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.ApplicationPlan", b =>
@@ -179,7 +179,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("PlanId");
 
-                    b.ToTable("ApplicationPlans", (string)null);
+                    b.ToTable("t_application_plans", (string)null);
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.ApplicationVersionPolicy", b =>
@@ -212,7 +212,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasKey("ApplicationId");
 
-                    b.ToTable("ApplicationVersionPolicies", (string)null);
+                    b.ToTable("t_application_version_policies", (string)null);
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.AuthorizationEvent", b =>
@@ -249,7 +249,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("ApplicationId", "LicenseId", "CreatedAt");
 
-                    b.ToTable("AuthorizationEvents", (string)null);
+                    b.ToTable("t_authorization_events", (string)null);
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.BackupJob", b =>
@@ -302,7 +302,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("CreatedAt");
 
-                    b.ToTable("BackupJobs");
+                    b.ToTable("t_backup_jobs");
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.Channel", b =>
@@ -342,7 +342,7 @@ namespace KeyValidation.Infrastructure.Migrations
                     b.HasIndex("AccountId")
                         .IsUnique();
 
-                    b.ToTable("Channels", null, t =>
+                    b.ToTable("t_channels", null, t =>
                         {
                             t.HasCheckConstraint("CK_Channels_Quota", "\"RemainingQuota\" >= 0");
                         });
@@ -368,7 +368,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("ApplicationId", "PlanId");
 
-                    b.ToTable("ChannelPrices", null, t =>
+                    b.ToTable("t_channel_prices", null, t =>
                         {
                             t.HasCheckConstraint("CK_ChannelPrices_Price", "\"UnitPriceCents\" >= 0");
                         });
@@ -426,7 +426,7 @@ namespace KeyValidation.Infrastructure.Migrations
                     b.HasIndex("ChannelId", "Kind", "RequestId")
                         .IsUnique();
 
-                    b.ToTable("ChannelQuotaEntries", null, t =>
+                    b.ToTable("t_channel_quota_entries", null, t =>
                         {
                             t.HasCheckConstraint("CK_ChannelQuotaEntries_Balance", "\"BalanceAfter\" >= 0");
                         });
@@ -547,7 +547,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("ApplicationId", "ChannelId", "CreatedAt");
 
-                    b.ToTable("Orders", null, t =>
+                    b.ToTable("t_orders", null, t =>
                         {
                             t.HasCheckConstraint("CK_Orders_Price", "\"UnitPriceCents\" >= 0");
 
@@ -590,7 +590,7 @@ namespace KeyValidation.Infrastructure.Migrations
                     b.HasIndex("ActorId", "Operation", "RequestId")
                         .IsUnique();
 
-                    b.ToTable("CommerceReceipts");
+                    b.ToTable("t_commerce_receipts");
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.Customer", b =>
@@ -649,7 +649,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("ApplicationId", "ChannelId", "CreatedAt");
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("t_customers", (string)null);
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.DeviceBinding", b =>
@@ -684,7 +684,7 @@ namespace KeyValidation.Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("\"ReleasedAt\" IS NULL");
 
-                    b.ToTable("Bindings", (string)null);
+                    b.ToTable("t_bindings", (string)null);
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.DeviceRebindingEvent", b =>
@@ -712,7 +712,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("LicenseId", "Generation", "ChangedAt");
 
-                    b.ToTable("RebindingEvents", (string)null);
+                    b.ToTable("t_rebinding_events", (string)null);
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.License", b =>
@@ -839,7 +839,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("ApplicationId", "ChannelId", "CreatedAt");
 
-                    b.ToTable("Licenses", null, t =>
+                    b.ToTable("t_licenses", null, t =>
                         {
                             t.HasCheckConstraint("CK_Licenses_Devices", "\"MaxDevices\" BETWEEN 1 AND 100");
 
@@ -915,7 +915,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("ApplicationId", "ChannelId", "CreatedAt");
 
-                    b.ToTable("Batches", null, t =>
+                    b.ToTable("t_batches", null, t =>
                         {
                             t.HasCheckConstraint("CK_Batches_Quantity", "\"Quantity\" BETWEEN 1 AND 1000");
                         });
@@ -965,7 +965,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("LicenseId", "FrozenAt");
 
-                    b.ToTable("LicenseFreezes", (string)null);
+                    b.ToTable("t_license_freezes", (string)null);
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.LicenseOperationReceipt", b =>
@@ -999,7 +999,7 @@ namespace KeyValidation.Infrastructure.Migrations
                     b.HasIndex("ActorId", "RequestId")
                         .IsUnique();
 
-                    b.ToTable("OperationReceipts", (string)null);
+                    b.ToTable("t_operation_receipts", (string)null);
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.LicensePlan", b =>
@@ -1041,7 +1041,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("CreatedAt", "Id");
 
-                    b.ToTable("Plans", null, t =>
+                    b.ToTable("t_plans", null, t =>
                         {
                             t.HasCheckConstraint("CK_Plans_ActivationDays", "\"ActivationValidityDays\" IS NULL OR \"ActivationValidityDays\" BETWEEN 1 AND 3650");
 
@@ -1097,7 +1097,7 @@ namespace KeyValidation.Infrastructure.Migrations
                     b.HasIndex("TokenDigest")
                         .IsUnique();
 
-                    b.ToTable("Sessions", (string)null);
+                    b.ToTable("t_sessions", (string)null);
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.MonitoringIncident", b =>
@@ -1130,7 +1130,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("StartedAt");
 
-                    b.ToTable("MonitoringIncidents");
+                    b.ToTable("t_monitoring_incidents");
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.MonitoringSample", b =>
@@ -1176,7 +1176,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("SampledAt");
 
-                    b.ToTable("MonitoringSamples");
+                    b.ToTable("t_monitoring_samples");
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.NotificationPolicy", b =>
@@ -1201,7 +1201,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasKey("ApplicationId");
 
-                    b.ToTable("NotificationPolicies");
+                    b.ToTable("t_notification_policies");
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.OfflineLicenseRecord", b =>
@@ -1273,7 +1273,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("LicenseId", "IssuedAt");
 
-                    b.ToTable("OfflineLicenses", null, t =>
+                    b.ToTable("t_offline_licenses", null, t =>
                         {
                             t.HasCheckConstraint("CK_OfflineLicenses_Times", "\"IssuedAt\" <= \"NotBefore\" AND \"NotBefore\" < \"ExpiresAt\" AND \"ExpiresAt\" <= \"IssuedAt\" + INTERVAL '168 hours'");
                         });
@@ -1321,7 +1321,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("DispatchedAt", "CreatedAt");
 
-                    b.ToTable("OperationsEvents");
+                    b.ToTable("t_operations_events");
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.OrderHistory", b =>
@@ -1350,7 +1350,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("OrderId", "CreatedAt");
 
-                    b.ToTable("OrderHistories");
+                    b.ToTable("t_order_histories");
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.OrderLicense", b =>
@@ -1365,7 +1365,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("LicenseId");
 
-                    b.ToTable("OrderLicenses");
+                    b.ToTable("t_order_licenses");
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.PortalRequest", b =>
@@ -1445,7 +1445,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("ApplicationId", "ChannelId", "CreatedAt");
 
-                    b.ToTable("PortalRequests");
+                    b.ToTable("t_portal_requests");
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.PortalSession", b =>
@@ -1481,7 +1481,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("CustomerId", "ExpiresAt");
 
-                    b.ToTable("PortalSessions");
+                    b.ToTable("t_portal_sessions");
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.RiskEvent", b =>
@@ -1542,7 +1542,7 @@ namespace KeyValidation.Infrastructure.Migrations
                     b.HasIndex("LicenseId", "Rule", "WindowStart")
                         .IsUnique();
 
-                    b.ToTable("RiskEvents");
+                    b.ToTable("t_risk_events");
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.RiskPolicy", b =>
@@ -1573,7 +1573,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasKey("ApplicationId");
 
-                    b.ToTable("RiskPolicies");
+                    b.ToTable("t_risk_policies");
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.SoftwareApplication", b =>
@@ -1605,7 +1605,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("CreatedAt");
 
-                    b.ToTable("Applications", (string)null);
+                    b.ToTable("t_applications", (string)null);
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.StaffNotification", b =>
@@ -1659,7 +1659,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("RecipientId", "CreatedAt");
 
-                    b.ToTable("StaffNotifications");
+                    b.ToTable("t_staff_notifications");
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.TrialClaim", b =>
@@ -1698,7 +1698,7 @@ namespace KeyValidation.Infrastructure.Migrations
                     b.HasIndex("ApplicationId", "DeviceDigest")
                         .IsUnique();
 
-                    b.ToTable("TrialClaims", (string)null);
+                    b.ToTable("t_trial_claims", (string)null);
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.TrialPolicy", b =>
@@ -1720,7 +1720,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasKey("ApplicationId");
 
-                    b.ToTable("TrialPolicies", null, t =>
+                    b.ToTable("t_trial_policies", null, t =>
                         {
                             t.HasCheckConstraint("CK_TrialPolicies_Duration", "\"DurationSeconds\" BETWEEN 1 AND 2592000");
                         });
@@ -1785,7 +1785,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("Status", "NextAttemptAt");
 
-                    b.ToTable("WebhookDeliveries");
+                    b.ToTable("t_webhook_deliveries");
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.WebhookSubscription", b =>
@@ -1828,7 +1828,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("ApplicationId");
 
-                    b.ToTable("WebhookSubscriptions");
+                    b.ToTable("t_webhook_subscriptions");
                 });
 
             modelBuilder.Entity("KeyValidation.Infrastructure.AdminRecoveryCode", b =>
@@ -1842,7 +1842,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasKey("UserId", "Digest");
 
-                    b.ToTable("AdminRecoveryCodes", (string)null);
+                    b.ToTable("t_admin_recovery_codes", (string)null);
                 });
 
             modelBuilder.Entity("KeyValidation.Infrastructure.AdminUser", b =>
@@ -1965,7 +1965,7 @@ namespace KeyValidation.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("t_asp_net_users", (string)null);
                 });
 
             modelBuilder.Entity("KeyValidation.Infrastructure.RoleDefinition", b =>
@@ -1988,7 +1988,7 @@ namespace KeyValidation.Infrastructure.Migrations
                     b.HasIndex("LegacyUserId")
                         .IsUnique();
 
-                    b.ToTable("RoleDefinitions", (string)null);
+                    b.ToTable("t_role_definitions", (string)null);
                 });
 
             modelBuilder.Entity("KeyValidation.Infrastructure.RolePermission", b =>
@@ -2004,7 +2004,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("Permission", "RoleId");
 
-                    b.ToTable("RolePermissions", (string)null);
+                    b.ToTable("t_role_permissions", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -2030,7 +2030,7 @@ namespace KeyValidation.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("AspNetRoles", (string)null);
+                    b.ToTable("t_asp_net_roles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -2055,7 +2055,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", (string)null);
+                    b.ToTable("t_asp_net_role_claims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -2080,7 +2080,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", (string)null);
+                    b.ToTable("t_asp_net_user_claims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -2102,7 +2102,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", (string)null);
+                    b.ToTable("t_asp_net_user_logins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -2117,7 +2117,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", (string)null);
+                    b.ToTable("t_asp_net_user_roles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -2136,7 +2136,7 @@ namespace KeyValidation.Infrastructure.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", (string)null);
+                    b.ToTable("t_asp_net_user_tokens", (string)null);
                 });
 
             modelBuilder.Entity("KeyValidation.Domain.ApiCredential", b =>

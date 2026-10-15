@@ -43,8 +43,8 @@ public sealed class ReliabilitySafetyTests(ApiFixture fixture) : IClassFixture<A
         using var actor = await fixture.Login(userName);
         using var block = fixture.Services.CreateScope(); var blockedDb = block.ServiceProvider.GetRequiredService<AppDbContext>();
         await using var tx = await blockedDb.Database.BeginTransactionAsync();
-        if (kind == "risk") await blockedDb.Database.ExecuteSqlInterpolatedAsync($"SELECT \"Id\" FROM \"RiskEvents\" WHERE \"Id\" = {resource} FOR UPDATE");
-        else await blockedDb.Database.ExecuteSqlInterpolatedAsync($"SELECT \"Id\" FROM \"StaffNotifications\" WHERE \"Id\" = {resource} FOR UPDATE");
+        if (kind == "risk") await blockedDb.Database.ExecuteSqlInterpolatedAsync($"SELECT \"Id\" FROM \"t_risk_events\" WHERE \"Id\" = {resource} FOR UPDATE");
+        else await blockedDb.Database.ExecuteSqlInterpolatedAsync($"SELECT \"Id\" FROM \"t_staff_notifications\" WHERE \"Id\" = {resource} FOR UPDATE");
         var pending = kind == "risk" ? actor.PostAsJsonAsync($"/api/admin/risk-events/{resource}/review", new ReviewRiskEvent("dismissed", "queued")) : actor.PostAsync($"/api/admin/notifications/{resource}/read", null);
         var waiting = false;
         try

@@ -1,7 +1,5 @@
 namespace KeyValidation.Api.DeveloperIntegration;
-
 public sealed record DeveloperTroubleshootingGuide(string ErrorCode, bool Known, string Markdown, string Version);
-
 public sealed class DeveloperTroubleshootingCatalog
 {
     private static readonly IReadOnlyDictionary<string, string> Guides = new Dictionary<string, string>(StringComparer.Ordinal)
@@ -25,11 +23,11 @@ public sealed class DeveloperTroubleshootingCatalog
         ["TRIAL_UPGRADED"] = "试用已升级。停止旧试用会话，使用正式卡密激活。",
         ["429"] = "请求过于频繁。读取 Retry-After（秒或 HTTP 日期），有界退避等待不得超过当前最早截止期限；到期停止受保护功能。"
     };
-
     public DeveloperTroubleshootingGuide Get(string errorCode, string? operationId)
     {
-        if (string.IsNullOrWhiteSpace(errorCode) || errorCode.Length > 100) throw new ArgumentException("Error code must contain 1–100 characters.", nameof(errorCode));
-        if (operationId is not null && new DeveloperDocumentationCatalog().GetApiReference(operationId) is null)
+        if (string.IsNullOrWhiteSpace(errorCode) || errorCode.Length > 100)
+            throw new ArgumentException("Error code must contain 1–100 characters.", nameof(errorCode));
+        if (operationId is not null && new DeveloperDocumentationCatalog().GetApiReference(operationId)is null)
             throw new ArgumentException("Unknown operation ID.", nameof(operationId));
         var known = Guides.TryGetValue(errorCode, out var markdown);
         markdown ??= "此错误码未收录；不推断服务端原因。核对 HTTP 状态、请求字段及公开接口文档，保留脱敏 traceId 联系提供方。明确拒绝或租约到期立即停止受保护功能；网络故障与 5xx 仅在有效租约内有界重试。不要提交卡密、令牌或原始日志。";

@@ -112,7 +112,7 @@ public sealed class RebindingTests(ApiFixture fixture) : IClassFixture<ApiFixtur
         await AssertCode(await client.PostAsync("/api/client/device-bindings/release", null), HttpStatusCode.Conflict, "REBIND_LIMIT_REACHED");
         using var scope = fixture.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        Assert.Equal(3, await db.Database.SqlQuery<int>($"SELECT COUNT(*)::int AS \"Value\" FROM \"RebindingEvents\" WHERE \"LicenseId\" = {id}").SingleAsync());
+        Assert.Equal(3, await db.Database.SqlQuery<int>($"SELECT COUNT(*)::int AS \"Value\" FROM \"t_rebinding_events\" WHERE \"LicenseId\" = {id}").SingleAsync());
         var audits = await db.AuditLogs.Where(x => x.TargetId == id && x.Action == "license.device-policy.reset").ToListAsync();
         Assert.Single(audits);
         Assert.Contains("verified device replacement", audits[0].Changes);

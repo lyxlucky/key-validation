@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { App as AntApp, Avatar, Button, Drawer, Grid, Layout, Tag, Tooltip } from 'antd';
+import { Suspense, useEffect, useRef, useState } from 'react';
+import { App as AntApp, Avatar, Button, Drawer, Grid, Layout, Spin, Tag, Tooltip } from 'antd';
 import { LogoutOutlined, MenuFoldOutlined, MenuOutlined, MenuUnfoldOutlined, RightOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import type { Location } from 'react-router-dom';
@@ -56,7 +56,7 @@ export function AdminLayout({ pages, home }: { pages: WorkspacePage[]; home: str
     <WorkspaceNavigation pages={pages} active={location.pathname} collapsed={isCollapsed} visit={key => { closeForNavigation(); workspace.visit(key); }} />
     <div className="sidebar-footer"><span className="sidebar-footer-icon"><SafetyCertificateOutlined /></span><div><strong>授权管理，尽在掌握</strong><p>从卡密发行到设备验证</p></div></div>
   </>;
-  const renderPage = (snapshot: Location, tabId: number) => <LicenseOperationsProvider tabId={tabId}><Routes location={snapshot}>{navigation.map(item => <Route key={item.key} path={item.key} element={<RequireAccess permission={item.permission} anyPermissions={item.anyPermissions} globalScopeOnly={item.globalScopeOnly} adminOnly={item.adminOnly} anyPermission={item.anyPermission}>{item.element}</RequireAccess>} />)}</Routes></LicenseOperationsProvider>;
+  const renderPage = (snapshot: Location, tabId: number) => <LicenseOperationsProvider tabId={tabId}><Routes location={snapshot}>{navigation.map(item => <Route key={item.key} path={item.key} element={<RequireAccess permission={item.permission} anyPermissions={item.anyPermissions} globalScopeOnly={item.globalScopeOnly} adminOnly={item.adminOnly} anyPermission={item.anyPermission}><Suspense fallback={<Spin description="正在加载页面…" />}>{item.element}</Suspense></RequireAccess>} />)}</Routes></LicenseOperationsProvider>;
   return <LicenseOperationRecoveryProvider activeTabId={workspace.tabs.find(tab => tab.location.pathname === workspace.active)?.id}><Layout className="app-shell screen-enter">
     <a href="#main-content" className="skip-link">跳到主内容</a>
     {screens.md && <Layout.Sider width={232} collapsed={collapsed} collapsedWidth={76} trigger={null} className="sidebar" theme="dark">{sidebarContent(collapsed)}</Layout.Sider>}

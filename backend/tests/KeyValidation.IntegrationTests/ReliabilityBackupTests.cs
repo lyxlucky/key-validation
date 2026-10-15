@@ -145,7 +145,7 @@ public sealed class ReliabilityBackupTests(ApiFixture fixture, ITestOutputHelper
             var cs = new NpgsqlConnectionStringBuilder(original) { Database = restored.DatabaseName, Pooling = false };
             await using (var connection = new NpgsqlConnection(cs.ConnectionString))
             {
-                await connection.OpenAsync(); await using var command = new NpgsqlCommand("SELECT \"KeyDigest\" FROM \"Licenses\" WHERE \"Id\" = @id", connection); command.Parameters.AddWithValue("id", issued.Licenses[0].Id);
+                await connection.OpenAsync(); await using var command = new NpgsqlCommand("SELECT \"KeyDigest\" FROM \"t_licenses\" WHERE \"Id\" = @id", connection); command.Parameters.AddWithValue("id", issued.Licenses[0].Id);
                 var digest = (string?)await command.ExecuteScalarAsync(); Assert.NotNull(digest);
                 var config = JsonSerializer.Deserialize<Dictionary<string, string?>>(await File.ReadAllTextAsync(System.IO.Path.Combine(restored.KeysDirectory, "configuration.json")))!;
                 var secrets = new SecretService(new ConfigurationBuilder().AddInMemoryCollection(config).Build());

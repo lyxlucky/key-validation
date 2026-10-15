@@ -88,8 +88,8 @@
 .sidebar.ant-layout-sider-collapsed .ant-menu-sub.ant-menu-inline { display: none; }
 .sidebar nav, .navigation-drawer nav { scrollbar-width: thin; scrollbar-color: #3c4c66 transparent; }
 
-.screen-enter { animation: screen-enter var(--motion-normal) var(--motion-ease) both; }
-.login-form-card > .ant-form, .surface-enter { animation: screen-enter var(--motion-fast) ease-out both; }
+.screen-enter { animation: screen-enter var(--motion-normal) var(--motion-ease); }
+.login-form-card > .ant-form, .surface-enter { animation: screen-enter var(--motion-fast) ease-out; }
 .screen-snapshots-enabled .screen-enter, .screen-snapshots-enabled .login-form-card > .ant-form { animation: none; }
 ::view-transition-old(root) { animation: screen-leave var(--motion-fast) ease-out both; }
 ::view-transition-new(root) { animation: screen-enter var(--motion-normal) ease-out both; }

@@ -1,0 +1,6 @@
+# Keep repository and working-tree line endings consistent across platforms.
+* text=auto eol=lf
+
+# Windows command scripts require native line endings.
+*.bat text eol=crlf
+*.cmd text eol=crlf

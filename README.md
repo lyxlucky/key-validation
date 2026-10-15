@@ -38,7 +38,7 @@
 
 ## 目录
 
-后端从哪里读、各项目的职责及“激活卡密”的调用流程，见 [后端代码阅读指南](docs/backend-navigation.md)。
+后端使用 ASP.NET Core MVC Web API，按分层和业务模块组织，Controller 使用特性声明路由、参数绑定、授权和限流。各项目职责及“激活卡密”的调用流程，见 [后端代码阅读指南](docs/backend-navigation.md)。
 
 ```text
 backend/      API、应用服务、领域规则、数据库迁移与测试
@@ -53,7 +53,7 @@ docs/         设计、接口契约、实施计划与验证记录
 
 需要 .NET SDK 10、Node.js 22.12+ 和 PostgreSQL 17。数据库用户需能创建业务表；运行集成测试时还需创建数据库权限。
 
-当前工作区已准备本机开发环境：前端 `http://127.0.0.1:5173`、API `http://127.0.0.1:5080`，独立 PostgreSQL 位于 `127.0.0.1:55432`。随机生成的本机账号记录在被忽略的 `.local/dev-secrets.json` 中，使用 `adminUser` 和 `adminPassword` 登录；`.env` 已保存对应的开发配置。本机数据库含自动化验证生成的测试记录。这些配置与测试数据不是生产默认账号。
+当前工作区已准备开发环境：前端 `http://127.0.0.1:5173`、API `http://127.0.0.1:5080`，本机测试 PostgreSQL 位于 `127.0.0.1:55432`。应用数据库以被忽略的 `.env` 中的连接串为准，可独立指向远程 PostgreSQL。本机测试账号记录在 `.local/dev-secrets.json` 中，只适用于创建过这些账号的本机数据库；新数据库迁移后需按下方步骤创建管理员。这些配置与测试数据不是生产默认账号。
 
 重启本机后，可先运行 `node .local/provision-postgres.mjs` 启动本次工作区的数据库，再运行 `./scripts/start-dev.ps1`；`.local` 辅助文件不属于交付源码，迁移到其他机器时按照下面的标准安装步骤配置 PostgreSQL。
 

@@ -41,7 +41,7 @@ public sealed class ReliabilityRiskCursorTests(ApiFixture fixture) : IClassFixtu
         await using var transaction = await pending.Database.BeginTransactionAsync();
         // This is the existing licensing writer contract: take the application
         // FOR SHARE lock before obtaining the fact timestamp, through commit.
-        await pending.Database.ExecuteSqlInterpolatedAsync($"SELECT \"Id\" FROM \"Applications\" WHERE \"Id\" = {app.Id} FOR SHARE");
+        await pending.Database.ExecuteSqlInterpolatedAsync($"SELECT \"Id\" FROM \"t_applications\" WHERE \"Id\" = {app.Id} FOR SHARE");
         var factNow = fixture.Clock.GetUtcNow();
         var factAt = new DateTimeOffset(factNow.UtcTicks - factNow.UtcTicks % 10, TimeSpan.Zero);
         if (rule == "rebinding_burst")
@@ -124,7 +124,7 @@ public sealed class ReliabilityRiskCursorTests(ApiFixture fixture) : IClassFixtu
             new UpdateRiskPolicy(true, kind == "activation" ? 1 : 10000, 1, 1, 1, 1))).StatusCode);
         using var blockingScope = fixture.Services.CreateScope(); var blocking = blockingScope.ServiceProvider.GetRequiredService<AppDbContext>();
         await using var transaction = await blocking.Database.BeginTransactionAsync();
-        await blocking.Database.ExecuteSqlInterpolatedAsync($"SELECT \"Id\" FROM \"Applications\" WHERE \"Id\" = {app.Id} FOR UPDATE");
+        await blocking.Database.ExecuteSqlInterpolatedAsync($"SELECT \"Id\" FROM \"t_applications\" WHERE \"Id\" = {app.Id} FOR UPDATE");
         var cutoff = fixture.Clock.GetUtcNow();
         (await blocking.RiskPolicies.SingleAsync(x => x.ApplicationId == app.Id)).ScannedThrough = cutoff;
         await blocking.SaveChangesAsync();

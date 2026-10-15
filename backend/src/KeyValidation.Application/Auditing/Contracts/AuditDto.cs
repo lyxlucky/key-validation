@@ -1,0 +1,2 @@
+namespace KeyValidation.Application;
+public record AuditDto(Guid Id, string ActorId, string Action, Guid TargetId, string Changes, DateTimeOffset CreatedAt, string TraceId, string Category = "operation", string Result = "succeeded", string? ActorName = null, string? TargetType = null, string? TargetName = null, Guid? ApplicationId = null, string? ApplicationName = null, string? SourceIp = null, string? Method = null, string? ErrorCategory = null);

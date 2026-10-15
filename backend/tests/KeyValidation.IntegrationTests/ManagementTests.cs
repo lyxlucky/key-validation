@@ -66,7 +66,7 @@ public class ManagementTests(ApiFixture fixture) : IClassFixture<ApiFixture>
         await db.Database.ExecuteSqlRawAsync("""
             CREATE FUNCTION management_test_reject_receipt() RETURNS trigger LANGUAGE plpgsql AS $body$
             BEGIN RAISE EXCEPTION 'intentional integration test failure'; END; $body$;
-            CREATE TRIGGER management_test_reject_receipt BEFORE INSERT ON "OperationReceipts"
+            CREATE TRIGGER management_test_reject_receipt BEFORE INSERT ON "t_operation_receipts"
             FOR EACH ROW EXECUTE FUNCTION management_test_reject_receipt();
             """);
         try
@@ -79,7 +79,7 @@ public class ManagementTests(ApiFixture fixture) : IClassFixture<ApiFixture>
         finally
         {
             await db.Database.ExecuteSqlRawAsync("""
-                DROP TRIGGER management_test_reject_receipt ON "OperationReceipts";
+                DROP TRIGGER management_test_reject_receipt ON "t_operation_receipts";
                 DROP FUNCTION management_test_reject_receipt();
                 """);
         }

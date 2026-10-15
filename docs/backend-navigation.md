@@ -1,76 +1,82 @@
 # 后端代码阅读指南
 
-共享卡种从 [PlanEndpoints.cs](../backend/src/KeyValidation.Api/PlanEndpoints.cs) 进入。[PlanCatalogService.cs](../backend/src/KeyValidation.Application/PlanCatalogService.cs) 管理全局规则与应用引用；[PlanCatalogQueries.cs](../backend/src/KeyValidation.Application/PlanCatalogQueries.cs) 统一目录投影；[PlanAvailability.cs](../backend/src/KeyValidation.Application/PlanAvailability.cs) 在业务事务内按卡种、引用顺序锁定并验证组合。ApplicationPlans 表保存使用关系和本应用发行开关，卡密与订单的参数快照继续独立保存。
+后端采用 ASP.NET Core MVC Web API，按 API、Application、Domain、Infrastructure 分层，每层内部再按业务模块组织。所有业务 HTTP 接口均由 Controller 承载；健康检查、OpenAPI 和 MCP 协议入口在启动组合层注册。
 
-目前后端是一个 ASP.NET Core 服务，连接一个 PostgreSQL 数据库。四个项目是同一程序的代码分层，最终启动入口只有 KeyValidation.Api；后台通知、检测和备份任务也注册在这个服务中。
+## 项目职责
 
-## 先认识四个项目
-
-| 项目 | 主要职责 | 从哪里开始看 |
+| 项目 | 职责 | 入口 |
 | --- | --- | --- |
-| KeyValidation.Api | 启动服务，定义 HTTP 地址、认证、权限和错误响应 | [Program.cs](../backend/src/KeyValidation.Api/Program.cs)、[Endpoints.cs](../backend/src/KeyValidation.Api/Endpoints.cs) |
-| KeyValidation.Application | 编排业务流程：验证卡密、发卡、订单履约、签发离线许可，以及事务顺序 | [LicensingService.cs](../backend/src/KeyValidation.Application/LicensingService.cs)、[OrderFulfillment.cs](../backend/src/KeyValidation.Application/OrderFulfillment.cs) |
-| KeyValidation.Domain | 业务对象及自身规则：卡密、设备、会话、订单等 | [License.cs](../backend/src/KeyValidation.Domain/License.cs)、[Records.cs](../backend/src/KeyValidation.Domain/Records.cs) |
-| KeyValidation.Infrastructure | 具体实现：EF Core 数据库、Identity、密钥、Webhook 网络、备份工具与后台任务 | [AppDbContext.cs](../backend/src/KeyValidation.Infrastructure/AppDbContext.cs)、[SecretService.cs](../backend/src/KeyValidation.Infrastructure/SecretService.cs) |
+| KeyValidation.Api | Controller、HTTP 参数绑定、认证授权、限流、错误响应与启动配置 | [Program.cs](../backend/src/KeyValidation.Api/Program.cs)、[Composition](../backend/src/KeyValidation.Api/Composition) |
+| KeyValidation.Application | 用例编排、事务顺序、业务查询、请求与响应契约、基础设施抽象 | [Licensing](../backend/src/KeyValidation.Application/Licensing)、[Abstractions](../backend/src/KeyValidation.Application/Abstractions) |
+| KeyValidation.Domain | 领域实体、状态转换与业务规则 | [Licensing](../backend/src/KeyValidation.Domain/Licensing)、[Commerce](../backend/src/KeyValidation.Domain/Commerce) |
+| KeyValidation.Infrastructure | EF Core、Identity、密钥、网络发送、备份与后台任务 | [Persistence](../backend/src/KeyValidation.Infrastructure/Persistence)、[Identity](../backend/src/KeyValidation.Infrastructure/Identity)、[Reliability](../backend/src/KeyValidation.Infrastructure/Reliability) |
 
-编译时的项目引用是 Api → Infrastructure → Application → Domain。运行时 Application 通过 ILicensingData、ICommerceData 等接口使用数据，Program.cs 把这些接口绑定到 AppDbContext。
+项目引用方向为 Api → Infrastructure → Application → Domain。Application 通过 `ILicensingData`、`ICommerceData` 等接口访问数据，Infrastructure 提供实现；每层的 `DependencyInjection.cs` 负责注册本层服务。Application 目前保留 EF Core 的 DbSet 和事务抽象，未改成完全隔离 ORM 的仓储架构。
 
-这里采用务实分层：Application 直接使用 EF Core 的 DbSet 和事务接口，不是完全隔离 ORM 的架构。账号安全服务还在 Api，一些渠道、风险和通知服务还在 Infrastructure；定位业务时应使用下面的功能索引。
+```text
+KeyValidation.Api/
+  Composition/               服务注册、请求管道与协议入口
+  Middleware/                HTTP 错误、CSRF、访问范围、Bearer 与可信地区
+  Features/
+    Administration/          Controllers、账号服务、HTTP 契约与安全组件
+    Licensing/Controllers/   卡密、试用、冻结、设备策略与客户端会话
+    Plans/Controllers/       全局卡种与应用引用
+    Commerce/Controllers/    客户、订单、渠道、门户与开放接口
+    ClientExtensions/        客户端版本与离线授权
+    Reliability/             风险、通知、Webhook、备份与监控
+  DeveloperIntegration/      开发文档、嵌入式示例与 MCP
+  Common/                    HTTP 错误、指标与操作者提取
+  OpenApi/                   契约与安全说明
+  Cli/                       管理账号、迁移与备份命令
+  Compatibility/             原 Map*Api 方法的弃用兼容入口
+```
 
-## 顺着“激活一张卡密”读
+API 面向独立前端，不需要 Razor Views。MVC 的 Model 使用请求/响应 DTO 和领域对象，各有自己的职责。账号安全服务仍在 API 层，因为它们直接依赖 Cookie、HttpContext 与 Identity 登录流程；渠道、通知等现有服务的职责和行为在本轮重构中保持不变。
 
-1. 软件发送 POST /api/client/licenses/activate，包含应用代码、卡密、设备标识和可选客户端版本。
-2. [Endpoints.cs](../backend/src/KeyValidation.Api/Endpoints.cs) 中的 MapPost 接收请求，把它交给 LicensingService.Activate。
-3. [Contracts.cs](../backend/src/KeyValidation.Application/Contracts.cs) 定义 ActivateLicense 请求和 ActivationDto 响应的字段。
-4. [LicensingService.cs](../backend/src/KeyValidation.Application/LicensingService.cs) 的 Activate / ActivateTransaction / StartActivation 完成流程：查应用和卡密、检查版本和状态、检查设备与在线上限、建立绑定和会话。
-5. [License.cs](../backend/src/KeyValidation.Domain/License.cs) 中的 EnsureUsable、EnsureDeviceCapacity、EnsureSessionCapacity、Activate 负责卡密自身规则。
-6. 服务通过 [ILicensingData.cs](../backend/src/KeyValidation.Application/ILicensingData.cs) 读写数据；实际实现来自 [AppDbContext.cs](../backend/src/KeyValidation.Infrastructure/AppDbContext.cs)。
-7. 数据库事务提交后返回会话令牌、授权功能和租约。之后软件按约定发送心跳。
+## Controller 约定
 
-~~~mermaid
-flowchart LR
-    Client[软件客户端] --> Endpoint[Api / Endpoints.cs]
-    Endpoint --> Service[Application / LicensingService.Activate]
-    Service --> Rules[Domain / License 规则]
-    Service --> Data[ILicensingData]
-    Data --> Db[Infrastructure / AppDbContext]
-    Db --> PG[(PostgreSQL)]
-~~~
+- 使用 `[ApiController]` 和 `[Route]` 声明接口边界，HTTP 动作用 `[HttpGet]`、`[HttpPost]`、`[HttpPut]`、`[HttpPatch]`、`[HttpDelete]` 明确声明。
+- 服务由构造函数注入；路由、查询串和请求体分别使用 `[FromRoute]`、`[FromQuery]`、`[FromBody]`。需要强制提供的查询参数使用 `[BindRequired]`。
+- `[Authorize(Policy = ...)]` 保留原角色、权限策略及其叠加关系。业务服务中的应用/渠道数据范围检查继续生效。
+- `[EnableRateLimiting]` 声明命名限流策略；激活接口使用 `[ServiceFilter]` 接入按应用和 IP 分桶的 MVC Action Filter。全局限流仍先于请求体解析。
+- DTO 响应使用具体返回类型；创建或空响应使用 `ActionResult<T>` / `IActionResult`，并通过 `[ProducesResponseType]` 声明响应状态。
+- 请求绑定失败使用统一错误响应，保留 `code`、`traceId` 和原有 HTTP 状态。业务校验继续由领域和应用服务执行；未为增加特性而改变既有输入约束。
 
-行锁和事务用于防止并发超发设备名额、重复履约，以及授权撤销后旧请求继续写入。第一次阅读先看流程与方法名称，再阅读锁的具体实现。
+## 从激活卡密开始阅读
 
-## 按功能找代码
+1. [ClientLicensingController.cs](../backend/src/KeyValidation.Api/Features/Licensing/Controllers/ClientLicensingController.cs) 接收 `POST /api/client/licenses/activate`，绑定 `ActivateLicense`，调用应用服务并记录激活指标。
+2. [ActivationAdmissionActionFilter.cs](../backend/src/KeyValidation.Api/Features/Licensing/ActivationAdmissionActionFilter.cs) 在绑定后执行原有应用/IP 限流。
+3. [LicensingService.cs](../backend/src/KeyValidation.Application/Licensing/LicensingService.cs) 编排事务：查应用和卡密，检查版本、状态、设备与在线上限，建立绑定和会话。
+4. [License.cs](../backend/src/KeyValidation.Domain/Licensing/License.cs) 及同目录的 partial 文件维护授权状态与设备策略。
+5. [ILicensingData.cs](../backend/src/KeyValidation.Application/Abstractions/ILicensingData.cs) 定义数据访问边界，[AppDbContext.cs](../backend/src/KeyValidation.Infrastructure/Persistence/AppDbContext.cs) 实现它；模型配置位于 `Persistence/Models`。
 
-| 功能 | HTTP 入口（Api 项目） | 主要实现 |
+## 功能索引
+
+| 功能 | HTTP 入口 | 服务位置 |
 | --- | --- | --- |
-| 应用、卡种、卡密、激活、心跳 | Endpoints.cs | Application/LicensingService.cs、LicensingQueries.cs |
-| 续期、备注标签、批量操作 | ManagementEndpoints.cs | Application/LicensingOperations.cs |
-| 冻结、试用、授权功能 | PolicyEndpoints.cs | Application/LicensingPolicies.cs、LicensingTrials.cs |
-| 设备换绑 | RebindingEndpoints.cs | Application/LicensingRebinding.cs、BindingRelease.cs |
-| 账号、角色、权限、数据范围 | AdminAccounts.cs、RoleEndpoints.cs、AccessEndpoints.cs | Api/AccountSecurity.cs、Application/ApplicationAccessScope.cs、Infrastructure/RbacModel.cs、AccessModel.cs |
-| 登录安全和双重验证 | AccountSecurityEndpoints.cs | Api/AccountSecurity.cs、Totp.cs |
-| 客户、渠道、订单 | CommerceEndpoints.cs | Application/CustomerService.cs、OrderService.cs、OrderFulfillment.cs；Infrastructure/ChannelService.cs |
-| 客户门户、申请审批 | PortalEndpoints.cs、CommerceEndpoints.cs | Application/PortalRequestService.cs；Infrastructure/CommerceAuthentication.cs |
-| 外部业务 API | ExternalApiEndpoints.cs | Infrastructure/ApiCredentialService.cs，与客户、订单服务共享业务流程 |
-| 风险、通知、统计 | ReliabilityEndpoints.cs、AccessEndpoints.cs | Infrastructure/RiskService.cs、NotificationService.cs、OperationsWorker.cs；Application/LicensingReports.cs |
-| Webhook | WebhookEndpoints.cs | Infrastructure/WebhookService.cs、WebhookDeliveryProcessor.cs、WebhookTransport.cs |
-| 备份、恢复、监控 | BackupEndpoints.cs、MonitoringEndpoints.cs | Infrastructure/Backup*.cs、MonitoringService.cs |
-| 版本管理、离线授权 | ClientExtensionEndpoints.cs | Application/ClientVersionPolicy.cs、OfflineLicenseService.cs；Infrastructure/OfflineLicenseKeyring.cs |
+| 应用、卡密、发卡、激活、心跳 | Licensing/Controllers | Application/Licensing |
+| 卡种目录、应用引用 | Plans/Controllers/PlansController | Application/Plans |
+| 续期、备注、批量操作 | Licensing/Controllers/LicenseManagementController | Application/Licensing |
+| 冻结、试用、设备换绑 | Licensing/Controllers | Application/Licensing；Domain/Licensing |
+| 账号、角色、权限、登录与双重验证 | Administration/Controllers | Api/Features/Administration/Services、Security；Infrastructure/Identity |
+| 客户、订单、门户 | Commerce/Controllers | Application/Commerce；Infrastructure/Commerce/Authentication |
+| 渠道、开放 API 凭证 | Commerce/Controllers | Infrastructure/Commerce/Channels、Integrations |
+| 版本策略、离线授权 | ClientExtensions/Controllers | Application/ClientVersions、OfflineLicensing；Infrastructure/OfflineLicensing |
+| 风险、通知、Webhook、备份、监控 | Reliability/Controllers | Infrastructure/Reliability；Infrastructure/BackgroundJobs |
+| 开发接入文档与 MCP | DeveloperIntegration | 原嵌入资源路径保持不变 |
 
-## 几个容易误解的命名和写法
+共享卡种由 [PlanCatalogService.cs](../backend/src/KeyValidation.Application/Plans/PlanCatalogService.cs) 维护全局规则与应用引用；[PlanCatalogQueries.cs](../backend/src/KeyValidation.Application/Plans/PlanCatalogQueries.cs) 统一目录投影；[PlanAvailability.cs](../backend/src/KeyValidation.Application/Plans/PlanAvailability.cs) 在业务事务内按原顺序锁定和验证。卡密与订单继续保留独立的发行参数快照。
 
-- **没有 Controllers 文件夹**：HTTP 层使用 ASP.NET Core Minimal API，以 MapGet、MapPost 等方法注册地址，Endpoints 文件承担常见 Controller 的接口入口职责。
-- **partial 不是继承**：多个文件里出现 partial class LicensingService，编译后仍是同一个类。LicensingQueries、LicensingTrials 等只是把这个类的方法按功能分文件；AppDbContext 的多个 Model 文件同理。
-- **Contracts / Dto**：用于请求和响应的数据形状；Domain 对象则表示内部业务状态，二者用途不同。
-- **Model 文件**：这里多数是 EF Core 表结构、索引、关联和范围过滤的配置，不是网页收到的响应对象。
-- **Migrations**：数据库结构升级记录；初次理解业务无需从这些生成文件入手。
-- **Application 一词有两层含义**：KeyValidation.Application 是业务逻辑项目；SoftwareApplication 是你在后台创建的“待授权软件应用”。
-- **RBAC 与数据范围分别生效**：角色决定能做什么，例如 licenses.manage；应用/渠道范围决定能操作哪些数据。拥有某个权限不代表可以访问所有应用。
+`partial` 文件仍属于同一个类，用于分隔现有用例或模型配置，不代表继承。数据库迁移保留在 Infrastructure/Migrations；本轮结构调整不修改迁移历史。
 
-## 目前影响可读性的地方
+## 验证与配置
 
-不少类的写法过于紧凑，Program.cs 注册内容较长，功能文件集中在项目根目录，而且部分业务服务所在层并不统一。理解困难来自这些组织问题，并非必须先掌握整套架构才能修改功能。
+数据库表统一采用 `t_` 加小写下划线命名，例如 `t_applications`、`t_order_licenses`、`t_asp_net_users`，由 Infrastructure 的 `TableNamingConvention` 集中应用，覆盖业务表与 Identity 表。列名保持现有映射；PostgreSQL 中包含大写字母的列名仍需双引号。
 
-查一个功能时，先从上表的 HTTP 入口进入，再跟到服务方法与相关实体。新增或修复逻辑时，同时定位 backend/tests/KeyValidation.IntegrationTests 中相应功能测试；这些测试通过真实 PostgreSQL 和 HTTP 验证权限、事务及状态变化。backend/tests/KeyValidation.Tests 主要检查独立规则。
+`PrefixTableNames` 增量迁移重命名现有表及关联索引、约束，保留数据和引用，不重建业务表。历史迁移保持原样；框架迁移历史表 `__EFMigrationsHistory` 保持默认名称。备份恢复验证同时识别迁移前后的表名。
 
-实际接口字段和权限以 [API 契约](api-contract.md) 与运行中的 /openapi/v1.json 为准。
+`backend/tests/KeyValidation.Tests` 验证独立规则；`backend/tests/KeyValidation.IntegrationTests` 使用真实 PostgreSQL 和 HTTP 验证授权、事务、并发、错误响应及 OpenAPI。测试连接使用 `KEYVALIDATION_TEST_DATABASE`，应与应用的 `ConnectionStrings__Database` 分开配置。
+
+ASP.NET Core 使用 Npgsql 连接串，例如 `Host=...;Port=5432;Database=key_validation;Username=...;Password=...`，不能直接使用 JDBC URL。数据库密码和密钥保存于被忽略的 `.env` 或部署环境变量。
+
+接口字段与权限参见 [API 契约](api-contract.md) 和运行中的 `/openapi/v1.json`。历史设计与实施记录中的旧源码位置保留为历史说明；当前导航以本页为准。

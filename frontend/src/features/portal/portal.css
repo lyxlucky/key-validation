@@ -24,6 +24,7 @@
 .portal-pane { position: absolute; inset: 0; overflow: auto; scrollbar-gutter: stable; overscroll-behavior: contain; }
 .portal-welcome, .portal-content > nav, .portal-footer { flex-shrink: 0; }
 .portal-footer { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 28px 0; font-size: 12px; color: #586579; }
+.portal-footer > span { min-width: 0; overflow-wrap: anywhere; }
 .portal-content .ant-descriptions-item-content { overflow-wrap: anywhere; }
 @media (max-width: 767px) {
   .portal-login { padding: 28px 16px; align-items: start; }
@@ -34,4 +35,11 @@
   .portal-content { padding: 24px 16px 0; }
   .portal-welcome h1 { font-size: 24px; }
   .portal-footer { flex-direction: column; gap: 6px; }
+}
+/* Allow the whole portal to scroll when fixed chrome would crowd out its panels. */
+@media (max-height: 600px) {
+  .portal-shell { overflow-y: auto; }
+  .portal-content { flex: 1 0 auto; }
+  .portal-panels { flex: none; min-height: 280px; }
+  .portal-footer { padding-block: 16px; }
 }

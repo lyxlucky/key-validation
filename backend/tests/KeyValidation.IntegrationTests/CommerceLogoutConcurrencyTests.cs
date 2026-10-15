@@ -23,7 +23,7 @@ public sealed class CommerceLogoutConcurrencyTests(ApiFixture fixture) : IClassF
                 PERFORM pg_advisory_xact_lock(1262836066, 1);
                 RETURN NEW;
             END $test$;
-            CREATE TRIGGER commerce_test_pause_portal_request BEFORE INSERT ON "PortalRequests"
+            CREATE TRIGGER commerce_test_pause_portal_request BEFORE INSERT ON "t_portal_requests"
             FOR EACH ROW EXECUTE FUNCTION commerce_test_pause_portal_request();
             """);
         var requestId = Guid.NewGuid();
@@ -82,7 +82,7 @@ public sealed class CommerceLogoutConcurrencyTests(ApiFixture fixture) : IClassF
         finally
         {
             // The blocker transaction has ended before the trigger is removed, including failed assertions.
-            await db.Database.ExecuteSqlRawAsync("DROP TRIGGER commerce_test_pause_portal_request ON \"PortalRequests\"; DROP FUNCTION commerce_test_pause_portal_request();");
+            await db.Database.ExecuteSqlRawAsync("DROP TRIGGER commerce_test_pause_portal_request ON \"t_portal_requests\"; DROP FUNCTION commerce_test_pause_portal_request();");
         }
     }
 
@@ -97,12 +97,12 @@ public sealed class CommerceLogoutConcurrencyTests(ApiFixture fixture) : IClassF
         HttpStatusCode logoutStatus;
         await using (var blocker = await db.Database.BeginTransactionAsync())
         {
-            await db.Database.ExecuteSqlInterpolatedAsync($"SELECT \"Id\" FROM \"Applications\" WHERE \"Id\" = {app.Id} FOR UPDATE");
+            await db.Database.ExecuteSqlInterpolatedAsync($"SELECT \"Id\" FROM \"t_applications\" WHERE \"Id\" = {app.Id} FOR UPDATE");
             write = portal.PostAsJsonAsync("/api/portal/requests", new { requestId, type = "renewal", licenseId = license });
             writerWaiting = await WaitFor(db, () => write.IsCompleted, """
                 SELECT EXISTS (
                     SELECT 1 FROM pg_stat_activity WHERE datname = current_database()
-                        AND wait_event_type = 'Lock' AND query LIKE '%Applications%FOR SHARE%'
+                        AND wait_event_type = 'Lock' AND query LIKE '%t_applications%FOR SHARE%'
                 ) AS "Value"
                 """);
             using var logout = await portal.DeleteAsync("/api/portal/sessions").WaitAsync(TimeSpan.FromSeconds(15));

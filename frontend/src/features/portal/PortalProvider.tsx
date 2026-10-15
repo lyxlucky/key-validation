@@ -11,6 +11,7 @@ import { changeScreen } from '../../lib/motion';
 interface PortalAuth {
   customer: Customer | null; session: StoredPortalSession | null; loading: boolean;
   busy: boolean; error: string | null; login: (accessCode: string) => Promise<void>; logout: () => Promise<void>;
+  retryConnection: () => void;
   request: <T>(path: string, options?: { method?: string; body?: unknown }) => Promise<T>;
 }
 const Context = createContext<PortalAuth | null>(null);
@@ -21,6 +22,7 @@ export function PortalProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(!!session);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [connectionAttempt, setConnectionAttempt] = useState(0);
   const current = useRef(session); current.current = session;
   const cache = useQueryClient();
   const navigate = useNavigate();
@@ -38,7 +40,8 @@ export function PortalProvider({ children }: { children: ReactNode }) {
     }
     const timer = window.setTimeout(() => { clear(); setError('本次自助会话已过期，请重新输入访问码。'); }, Math.max(0, Date.parse(session.expiresAt) - Date.now()));
     return () => { active = false; window.clearTimeout(timer); };
-  }, [session, customer, cache]);
+  }, [session, customer, cache, connectionAttempt]);
+  function retryConnection() { setError(null); setLoading(true); setConnectionAttempt(value => value + 1); }
   useEffect(() => {
     const expired = (event: Event) => {
       if ((event as CustomEvent<{ token: string }>).detail?.token !== current.current?.token) return;
@@ -59,9 +62,12 @@ export function PortalProvider({ children }: { children: ReactNode }) {
   }
   async function logout() {
     if (!session || busy) return;
+    const token = session.token;
     setBusy(true); setError(null);
-    try { await portalApi<void>('/sessions', { method: 'DELETE', token: session.token }); await changeScreen(() => { clear(); navigate('/portal', { replace: true }); }); }
-    catch (caught) { setError((caught as Error).message); }
+    // Local credentials and customer content must disappear even if the server is unreachable.
+    clear(); navigate('/portal', { replace: true });
+    try { await portalApi<void>('/sessions', { method: 'DELETE', token }); }
+    catch { setError('已退出当前设备，但未能确认服务端会话注销。'); }
     finally { setBusy(false); }
   }
   async function request<T>(path: string, options: { method?: string; body?: unknown } = {}): Promise<T> {
@@ -69,7 +75,7 @@ export function PortalProvider({ children }: { children: ReactNode }) {
     if (!token) throw new Error('请先登录客户自助服务。');
     return portalApi<T>(path, { ...options, token });
   }
-  return <Context.Provider value={{ customer, session, loading, busy, error, login, logout, request }}>{children}</Context.Provider>;
+  return <Context.Provider value={{ customer, session, loading, busy, error, login, logout, retryConnection, request }}>{children}</Context.Provider>;
 }
 
 export function usePortal() { const value = useContext(Context); if (!value) throw new Error('PortalProvider missing'); return value; }

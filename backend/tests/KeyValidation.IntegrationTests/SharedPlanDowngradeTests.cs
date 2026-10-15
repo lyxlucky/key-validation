@@ -32,6 +32,8 @@ public sealed class SharedPlanDowngradeTests(ApiFixture fixture) : IClassFixture
                 AND column_name = 'ApplicationId'
             """).SingleAsync();
         Assert.Equal(0, columns);
+        await db.GetService<IMigrator>().MigrateAsync();
+        Assert.False(db.Database.HasPendingModelChanges());
     }
 }
 
@@ -55,9 +57,15 @@ public sealed class SharedPlanMultiReferenceDowngradeTests(ApiFixture fixture) :
         var error = await Assert.ThrowsAsync<PostgresException>(() =>
             db.GetService<IMigrator>().MigrateAsync("20261009100000_AddApplicationPlanReferences"));
         Assert.Contains("SHARED_PLAN_DOWNGRADE_UNSUPPORTED", error.MessageText);
-        Assert.Equal(2, await db.ApplicationPlans.CountAsync(x => x.PlanId == plan.Id));
+        // EF has already reverted the newer naming migration before the guarded
+        // historical downgrade fails. Inspect that historical schema, then upgrade.
+        Assert.Equal(2, await db.Database.SqlQuery<int>($"""
+            SELECT COUNT(*)::int AS "Value" FROM "ApplicationPlans" WHERE "PlanId" = {plan.Id}
+            """).SingleAsync());
         Assert.Contains("20261009101000_GlobalizePlans",
             await db.Database.GetAppliedMigrationsAsync());
+        await db.GetService<IMigrator>().MigrateAsync();
+        Assert.Equal(2, await db.ApplicationPlans.CountAsync(x => x.PlanId == plan.Id));
     }
 }
 

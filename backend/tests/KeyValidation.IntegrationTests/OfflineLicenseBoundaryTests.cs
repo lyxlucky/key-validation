@@ -54,7 +54,7 @@ public sealed partial class OfflineLicenseTests
         await db.Database.ExecuteSqlRawAsync("""
             CREATE FUNCTION offline_test_pause_insert() RETURNS trigger LANGUAGE plpgsql AS $test$
             BEGIN PERFORM pg_advisory_xact_lock(1262836071, 1); RETURN NEW; END $test$;
-            CREATE TRIGGER offline_test_pause_insert BEFORE INSERT ON "OfflineLicenses" FOR EACH ROW EXECUTE FUNCTION offline_test_pause_insert();
+            CREATE TRIGGER offline_test_pause_insert BEFORE INSERT ON "t_offline_licenses" FOR EACH ROW EXECUTE FUNCTION offline_test_pause_insert();
             """);
         Task<HttpResponseMessage>? signing = null; Task<HttpResponseMessage>? freeze = null; bool signingWaited = false, freezeWaited = false;
         try
@@ -70,7 +70,7 @@ public sealed partial class OfflineLicenseTests
                 {
                     freeze = admin.PostAsJsonAsync($"/api/admin/licenses/{detail.License.Id}/freeze", new { reason = "queued behind offline signing" });
                     freezeWaited = await WaitForOfflineLock(db, () => freeze.IsCompleted, """
-                        SELECT EXISTS (SELECT 1 FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%Licenses%FOR UPDATE%') AS "Value"
+                        SELECT EXISTS (SELECT 1 FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%t_licenses%FOR UPDATE%') AS "Value"
                         """);
                 }
                 await blocker.CommitAsync();
@@ -80,7 +80,7 @@ public sealed partial class OfflineLicenseTests
             Assert.Equal(HttpStatusCode.NoContent, (await freeze!.WaitAsync(TimeSpan.FromSeconds(15))).StatusCode);
             await Error(await Verify(client, issued, app), "LICENSE_FROZEN");
         }
-        finally { await db.Database.ExecuteSqlRawAsync("DROP TRIGGER offline_test_pause_insert ON \"OfflineLicenses\"; DROP FUNCTION offline_test_pause_insert();"); }
+        finally { await db.Database.ExecuteSqlRawAsync("DROP TRIGGER offline_test_pause_insert ON \"t_offline_licenses\"; DROP FUNCTION offline_test_pause_insert();"); }
     }
 
     [Theory]
@@ -101,10 +101,10 @@ public sealed partial class OfflineLicenseTests
         Task<HttpResponseMessage> pending; bool waiting;
         await using (var blocker = await db.Database.BeginTransactionAsync())
         {
-            await db.Database.ExecuteSqlInterpolatedAsync($"SELECT \"Id\" FROM \"Applications\" WHERE \"Id\" = {app.Id} FOR UPDATE");
+            await db.Database.ExecuteSqlInterpolatedAsync($"SELECT \"Id\" FROM \"t_applications\" WHERE \"Id\" = {app.Id} FOR UPDATE");
             pending = revoke ? actor.PostAsync($"/api/admin/offline-licenses/{id}/revoke", null) : Sign(actor, detail);
             waiting = await WaitForOfflineLock(db, () => pending.IsCompleted, """
-                SELECT EXISTS (SELECT 1 FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%Applications%FOR SHARE%') AS "Value"
+                SELECT EXISTS (SELECT 1 FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%t_applications%FOR SHARE%') AS "Value"
                 """);
             await Json(await admin.PutAsJsonAsync($"/api/admin/accounts/{accountId}/access", new { allApplications = true, applicationIds = Array.Empty<Guid>(), permissions = new[] { "licenses.read" } }));
             await blocker.CommitAsync();

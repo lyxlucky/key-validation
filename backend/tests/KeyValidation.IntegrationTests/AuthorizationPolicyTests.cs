@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using KeyValidation.Application;
@@ -230,7 +230,7 @@ public sealed class AuthorizationPolicyTests(ApiFixture fixture) : IClassFixture
         var trial = await Json(await client.PostAsJsonAsync("/api/client/trials/activate", new { appCode = app.Code, deviceId = "rollback" }));
         using var scope = fixture.Services.CreateScope(); var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         await db.Database.ExecuteSqlRawAsync("CREATE FUNCTION policy_test_reject_upgrade() RETURNS trigger LANGUAGE plpgsql AS 'BEGIN RAISE EXCEPTION ''injected upgrade failure''; END'");
-        await db.Database.ExecuteSqlRawAsync("CREATE TRIGGER policy_test_reject_upgrade BEFORE UPDATE ON \"TrialClaims\" FOR EACH ROW EXECUTE FUNCTION policy_test_reject_upgrade()");
+        await db.Database.ExecuteSqlRawAsync("CREATE TRIGGER policy_test_reject_upgrade BEFORE UPDATE ON \"t_trial_claims\" FOR EACH ROW EXECUTE FUNCTION policy_test_reject_upgrade()");
         try
         {
             await Error(await Activate(client, app, batch, "rollback"), "INTERNAL_ERROR", HttpStatusCode.InternalServerError);
@@ -241,7 +241,7 @@ public sealed class AuthorizationPolicyTests(ApiFixture fixture) : IClassFixture
         }
         finally
         {
-            await db.Database.ExecuteSqlRawAsync("DROP TRIGGER policy_test_reject_upgrade ON \"TrialClaims\"");
+            await db.Database.ExecuteSqlRawAsync("DROP TRIGGER policy_test_reject_upgrade ON \"t_trial_claims\"");
             await db.Database.ExecuteSqlRawAsync("DROP FUNCTION policy_test_reject_upgrade()");
         }
     }
@@ -349,7 +349,7 @@ public sealed class AuthorizationPolicyTests(ApiFixture fixture) : IClassFixture
         using (var scope = fixture.Services.CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<AppDbContext>(); var farLease = fixture.Clock.GetUtcNow().AddDays(1);
-            await db.Database.ExecuteSqlInterpolatedAsync($"UPDATE \"Sessions\" SET \"LeaseExpiresAt\" = {farLease} WHERE \"BindingId\" IN (SELECT \"Id\" FROM \"Bindings\" WHERE \"LicenseId\" = {id})");
+            await db.Database.ExecuteSqlInterpolatedAsync($"UPDATE \"t_sessions\" SET \"LeaseExpiresAt\" = {farLease} WHERE \"BindingId\" IN (SELECT \"Id\" FROM \"t_bindings\" WHERE \"LicenseId\" = {id})");
         }
         fixture.Clock.Advance(TimeSpan.FromHours(8));
         await Json(await Activate(client, app, batch, "B"));

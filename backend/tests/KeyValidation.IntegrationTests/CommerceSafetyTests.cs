@@ -80,7 +80,7 @@ public sealed class CommerceSafetyTests(ApiFixture fixture) : IClassFixture<ApiF
         await db.Database.ExecuteSqlRawAsync("""
             CREATE FUNCTION commerce_test_commit_failure() RETURNS trigger LANGUAGE plpgsql AS $test$
             BEGIN IF NEW."Action" = 'fulfilled' THEN RAISE EXCEPTION 'TEST_COMMIT_FAILURE'; END IF; RETURN NEW; END $test$;
-            CREATE CONSTRAINT TRIGGER commerce_test_commit_failure AFTER INSERT ON "OrderHistories" DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION commerce_test_commit_failure();
+            CREATE CONSTRAINT TRIGGER commerce_test_commit_failure AFTER INSERT ON "t_order_histories" DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION commerce_test_commit_failure();
             """);
         try
         {
@@ -91,7 +91,7 @@ public sealed class CommerceSafetyTests(ApiFixture fixture) : IClassFixture<ApiF
             Assert.Equal(0, await db.ChannelQuotaEntries.CountAsync(x => x.OrderId == id)); Assert.Equal(0, await db.OrderHistories.CountAsync(x => x.OrderId == id && x.Action == "fulfilled"));
             Assert.Equal(0, await db.OperationsEvents.CountAsync(x => x.ResourceId == id));
         }
-        finally { await db.Database.ExecuteSqlRawAsync("DROP TRIGGER commerce_test_commit_failure ON \"OrderHistories\"; DROP FUNCTION commerce_test_commit_failure();"); }
+        finally { await db.Database.ExecuteSqlRawAsync("DROP TRIGGER commerce_test_commit_failure ON \"t_order_histories\"; DROP FUNCTION commerce_test_commit_failure();"); }
         Assert.Equal("fulfilled", (await CommerceTestData.Fulfill(admin, id)).GetProperty("status").GetString());
     }
 
@@ -101,7 +101,7 @@ public sealed class CommerceSafetyTests(ApiFixture fixture) : IClassFixture<ApiF
         var (admin, app, _) = await fixture.Catalog(); using var cleanup = admin;
         var (channel, _, _) = await CommerceTestData.Channel(fixture, admin, app.Id, 5); var id = CommerceTestData.Id(channel);
         using var scope = fixture.Services.CreateScope(); var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        await Assert.ThrowsAsync<PostgresException>(() => db.Database.ExecuteSqlInterpolatedAsync($"UPDATE \"ChannelQuotaEntries\" SET \"Delta\" = 999 WHERE \"ChannelId\" = {id}"));
+        await Assert.ThrowsAsync<PostgresException>(() => db.Database.ExecuteSqlInterpolatedAsync($"UPDATE \"t_channel_quota_entries\" SET \"Delta\" = 999 WHERE \"ChannelId\" = {id}"));
         Assert.Equal(5, (await db.ChannelQuotaEntries.SingleAsync(x => x.ChannelId == id)).Delta);
     }
 
@@ -125,7 +125,7 @@ public sealed class CommerceSafetyTests(ApiFixture fixture) : IClassFixture<ApiF
         using var actorCleanup = actor;
         using var scope = fixture.Services.CreateScope(); var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         await using var blocker = new NpgsqlConnection(db.Database.GetConnectionString()); await blocker.OpenAsync(); await using var tx = await blocker.BeginTransactionAsync();
-        await using (var command = new NpgsqlCommand("SELECT \"Id\" FROM \"Applications\" WHERE \"Id\"=@id FOR UPDATE", blocker, tx)) { command.Parameters.AddWithValue("id", app.Id); await command.ExecuteNonQueryAsync(); }
+        await using (var command = new NpgsqlCommand("SELECT \"Id\" FROM \"t_applications\" WHERE \"Id\"=@id FOR UPDATE", blocker, tx)) { command.Parameters.AddWithValue("id", app.Id); await command.ExecuteNonQueryAsync(); }
         var prefix = apiCredential ? "/api/v1" : "/api/admin";
         var pending = actor.PostAsJsonAsync($"{prefix}/orders/{orderId}/fulfill", new { requestId = Guid.NewGuid() });
         try
@@ -167,7 +167,7 @@ public sealed class CommerceSafetyTests(ApiFixture fixture) : IClassFixture<ApiF
         while (DateTime.UtcNow < deadline)
         {
             await db.Database.ExecuteSqlRawAsync("SELECT pg_stat_clear_snapshot()");
-            if (await db.Database.SqlQueryRaw<int>("SELECT count(*)::integer AS \"Value\" FROM pg_stat_activity WHERE datname = current_database() AND wait_event_type = 'Lock' AND query LIKE '%Applications%FOR SHARE%'").SingleAsync() > 0) return;
+            if (await db.Database.SqlQueryRaw<int>("SELECT count(*)::integer AS \"Value\" FROM pg_stat_activity WHERE datname = current_database() AND wait_event_type = 'Lock' AND query LIKE '%t_applications%FOR SHARE%'").SingleAsync() > 0) return;
             await Task.Delay(20);
         }
         Assert.Fail("Expected a real PostgreSQL application lock waiter.");

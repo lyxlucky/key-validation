@@ -195,7 +195,7 @@ public sealed class RbacAdministrationTests(ApiFixture fixture) : IClassFixture<
         using var actor = await fixture.Login(name);
         using var scope = fixture.Services.CreateScope(); var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         await using var tx = await db.Database.BeginTransactionAsync();
-        await db.Database.ExecuteSqlInterpolatedAsync($"SELECT \"Id\" FROM \"Applications\" WHERE \"Id\" = {app.Id} FOR UPDATE");
+        await db.Database.ExecuteSqlInterpolatedAsync($"SELECT \"Id\" FROM \"t_applications\" WHERE \"Id\" = {app.Id} FOR UPDATE");
         var request = new IssueBatch(app.Id, plan.Id, 1, null, Guid.NewGuid());
         var pending = noChange ? actor.PostAsync($"/api/admin/licenses/{batch.Licenses[0].Id}/enable", null) : actor.PostAsJsonAsync("/api/admin/license-batches", request);
         var waiting = await RbacTestData.WaitForBlockedRequest(db);

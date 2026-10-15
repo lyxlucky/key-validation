@@ -1,26 +1,28 @@
+import { lazy } from 'react';
 import { CreditCardOutlined, ApiOutlined, AppstoreOutlined, AuditOutlined, BarChartOutlined, BellOutlined, ClockCircleOutlined, DashboardOutlined, FileDoneOutlined, IdcardOutlined, KeyOutlined, SafetyCertificateOutlined, ShopOutlined, ShoppingCartOutlined, TeamOutlined, ToolOutlined, UnorderedListOutlined, WarningOutlined } from '@ant-design/icons';
-import { OverviewPage } from '../features/dashboard/OverviewPage';
-import { PlansPage } from '../features/plans/PlansPage';
-import { ApplicationsPage } from '../features/applications/ApplicationsPage';
-import { LicensesPage } from '../features/licenses/LicensesPage';
-import { LogPage } from '../features/audit/LogPage';
-import { AccountsPage } from '../features/accounts/AccountsPage';
-import { RolesPage } from '../features/accounts/RolesPage';
-import { BatchesPage } from '../features/batches/BatchesPage';
-import { ExpiryPage } from '../features/expiry/ExpiryPage';
-import { SecurityPage } from '../features/security/SecurityPage';
-import { ReportsPage } from '../features/operations/ReportsPage';
-import { RiskPage } from '../features/operations/RiskPage';
-import { NotificationsPage } from '../features/operations/NotificationsPage';
-import { OperationsPage } from '../features/operations/OperationsPage';
-import { IntegrationsPage } from '../features/integrations/IntegrationsPage';
-import { CustomersPage } from '../features/commerce/CustomersPage';
-import { OrdersPage } from '../features/commerce/OrdersPage';
-import { ChannelsPage } from '../features/commerce/ChannelsPage';
-import { PortalRequestsPage } from '../features/commerce/PortalRequestsPage';
-import { ClientPoliciesPage } from '../features/client-policies/ClientPoliciesPage';
-import { OfflineLicensesPage } from '../features/client-policies/OfflineLicensesPage';
 import type { WorkspacePage } from '../features/workspace/Workspace';
+
+const OverviewPage = lazy(() => import('../features/dashboard/OverviewPage').then(module => ({ default: module.OverviewPage })));
+const PlansPage = lazy(() => import('../features/plans/PlansPage').then(module => ({ default: module.PlansPage })));
+const ApplicationsPage = lazy(() => import('../features/applications/ApplicationsPage').then(module => ({ default: module.ApplicationsPage })));
+const LicensesPage = lazy(() => import('../features/licenses/LicensesPage').then(module => ({ default: module.LicensesPage })));
+const LogPage = lazy(() => import('../features/audit/LogPage').then(module => ({ default: module.LogPage })));
+const AccountsPage = lazy(() => import('../features/accounts/AccountsPage').then(module => ({ default: module.AccountsPage })));
+const RolesPage = lazy(() => import('../features/accounts/RolesPage').then(module => ({ default: module.RolesPage })));
+const BatchesPage = lazy(() => import('../features/batches/BatchesPage').then(module => ({ default: module.BatchesPage })));
+const ExpiryPage = lazy(() => import('../features/expiry/ExpiryPage').then(module => ({ default: module.ExpiryPage })));
+const SecurityPage = lazy(() => import('../features/security/SecurityPage').then(module => ({ default: module.SecurityPage })));
+const ReportsPage = lazy(() => import('../features/operations/ReportsPage').then(module => ({ default: module.ReportsPage })));
+const RiskPage = lazy(() => import('../features/operations/RiskPage').then(module => ({ default: module.RiskPage })));
+const NotificationsPage = lazy(() => import('../features/operations/NotificationsPage').then(module => ({ default: module.NotificationsPage })));
+const OperationsPage = lazy(() => import('../features/operations/OperationsPage').then(module => ({ default: module.OperationsPage })));
+const IntegrationsPage = lazy(() => import('../features/integrations/IntegrationsPage').then(module => ({ default: module.IntegrationsPage })));
+const CustomersPage = lazy(() => import('../features/commerce/CustomersPage').then(module => ({ default: module.CustomersPage })));
+const OrdersPage = lazy(() => import('../features/commerce/OrdersPage').then(module => ({ default: module.OrdersPage })));
+const ChannelsPage = lazy(() => import('../features/commerce/ChannelsPage').then(module => ({ default: module.ChannelsPage })));
+const PortalRequestsPage = lazy(() => import('../features/commerce/PortalRequestsPage').then(module => ({ default: module.PortalRequestsPage })));
+const ClientPoliciesPage = lazy(() => import('../features/client-policies/ClientPoliciesPage').then(module => ({ default: module.ClientPoliciesPage })));
+const OfflineLicensesPage = lazy(() => import('../features/client-policies/OfflineLicensesPage').then(module => ({ default: module.OfflineLicensesPage })));
 
 export const navigation: WorkspacePage[] = [
   { key: '/overview', icon: <DashboardOutlined />, label: '概览', permission: 'reports.read', element: <OverviewPage /> },

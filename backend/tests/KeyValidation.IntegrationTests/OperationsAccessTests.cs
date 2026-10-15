@@ -310,7 +310,7 @@ Assert.True(catalogPlan.GetProperty("isEnabled").GetBoolean());
         using var restricted = await fixture.Login(name);
         using var scope = fixture.Services.CreateScope(); var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         await using var tx = await db.Database.BeginTransactionAsync();
-        await db.Database.ExecuteSqlInterpolatedAsync($"SELECT \"Id\" FROM \"Applications\" WHERE \"Id\" = {app.Id} FOR UPDATE");
+        await db.Database.ExecuteSqlInterpolatedAsync($"SELECT \"Id\" FROM \"t_applications\" WHERE \"Id\" = {app.Id} FOR UPDATE");
         var request = new IssueBatch(app.Id, plan.Id, 1, null, Guid.NewGuid());
         var pending = restricted.PostAsJsonAsync("/api/admin/license-batches", request);
         var waiting = await WaitForBlockedRequest(db);
@@ -390,7 +390,7 @@ Assert.True(catalogPlan.GetProperty("isEnabled").GetBoolean());
         using var scope = fixture.Services.CreateScope(); var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var auditCount = await db.AuditLogs.CountAsync(x => x.TargetId == targetId);
         await using var transaction = await db.Database.BeginTransactionAsync();
-        await db.Database.ExecuteSqlInterpolatedAsync($"SELECT \"Id\" FROM \"Applications\" WHERE \"Id\" = {app.Id} FOR UPDATE");
+        await db.Database.ExecuteSqlInterpolatedAsync($"SELECT \"Id\" FROM \"t_applications\" WHERE \"Id\" = {app.Id} FOR UPDATE");
         var pending = send(actor);
         var waiting = await WaitForBlockedRequest(db);
         try
