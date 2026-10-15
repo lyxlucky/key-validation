@@ -1,0 +1,151 @@
+/* Application, license and audit workspaces. Shared surfaces live in global.css. */
+.sidebar .ant-layout-sider-children, .navigation-drawer .ant-drawer-body { display: flex; flex-direction: column; }
+.sidebar .brand, .navigation-drawer .brand, .workspace-card, .sidebar-label { flex-shrink: 0; }
+.sidebar nav, .navigation-drawer nav { flex: 1; min-height: 80px; overflow-y: auto; }
+.sidebar-footer { position: static; flex-shrink: 0; margin: 20px 20px 24px; }
+.license-bulk-toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px; padding: 15px; margin-bottom: 18px; border: 1px solid #dce7fa; border-radius: 8px; background: #f5f8ff; }
+.license-bulk-toolbar > div:first-child { display: flex; flex-direction: column; gap: 5px; font-size: 13px; }
+.license-bulk-toolbar .muted { font-size: 11px; }
+.license-tags { display: flex; flex-wrap: wrap; gap: 4px; min-width: 0; }
+.license-tags .ant-tag { margin: 0; max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+.license-detail-actions { margin-bottom: 18px; }
+.operation-preview { margin-bottom: 22px; }
+.license-operation-modal .ant-alert-description { overflow-wrap: anywhere; }
+.data-panel .panel-heading .panel-description,
+.ant-drawer .panel-heading .panel-description { margin: 7px 0 0; }
+.panel-heading > div { min-width: 0; }
+.panel-heading > .ant-btn { flex-shrink: 0; }
+.application-cell { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.application-cell strong { font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
+.application-icon, .overlay-icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 38px; height: 38px; border: 1px solid #dce7fc; border-radius: 10px; background: #edf3ff; color: #3267ce; font-size: 19px; }
+.application-summary { justify-content: flex-start; }
+.application-summary .application-icon { width: 46px; height: 46px; font-size: 23px; background: #fff; }
+.application-summary > div { min-width: 0; }
+.application-summary h3 { margin: 3px 0 7px; font-size: 17px; font-weight: 600; overflow-wrap: anywhere; }
+.application-summary code { color: #586b89; overflow-wrap: anywhere; }
+.summary-label { display: block; font-size: 11px; color: #62718a; margin-bottom: 4px; }
+.overlay-intro > div { min-width: 0; }
+.overlay-intro strong { display: block; color: #304664; font-size: 13px; font-weight: 600; line-height: 1.6; }
+.overlay-intro p { margin: 4px 0 0; color: #586b87; line-height: 1.8; font-size: 12px; }
+.form-note { display: flex; gap: 8px; align-items: flex-start; margin: 20px 0 0; padding: 13px 14px; border: 1px solid #e7ecf4; border-radius: 8px; color: #586579; background: #f8fafc; font-size: 12px; line-height: 1.8; }
+.form-note > .anticon { margin-top: 4px; color: #647a9e; flex-shrink: 0; }
+
+/* Labeled controls keep their relationships when the toolbar wraps. */
+.management-filter-bar { justify-content: flex-start; gap: 14px; padding-bottom: 21px; margin-bottom: 20px; border-bottom: 1px solid #e9edf4; }
+.filter-field { display: flex; flex: 1 1 170px; flex-direction: column; gap: 7px; min-width: 0; }
+.filter-field > label { color: #526078; font-size: 12px; font-weight: 500; line-height: 1.5; }
+.filter-field > .ant-select, .filter-field > .ant-input-search, .filter-field > .ant-picker { width: 100%; }
+.filter-field-status { flex-basis: 135px; }
+.filter-field-batch { flex-grow: 1.4; flex-basis: 210px; }
+.filter-actions { display: flex; flex-shrink: 0; gap: 8px; align-items: center; }
+.plan-filter-bar { justify-content: flex-start; gap: 16px; padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid #e9edf4; }
+.plan-filter-bar > .ant-input-search { width: 280px; max-width: 100%; }
+.plan-filter-bar > .ant-select { width: 180px; }
+.reference-filter-bar { justify-content: flex-start; gap: 16px; margin-bottom: 24px; }
+.reference-filter-bar > .ant-select { flex: 1 1 280px; max-width: 440px; min-width: 0; }
+@media (max-width: 575px) {
+  .plan-filter-bar { gap: 12px; padding-bottom: 16px; margin-bottom: 16px; }
+  .plan-filter-bar > .ant-input-search, .plan-filter-bar > .ant-select { width: 100%; }
+  .reference-filter-bar { gap: 12px; margin-bottom: 20px; }
+  .reference-filter-bar > .ant-select { flex-basis: 100%; max-width: none; }
+  .reference-filter-bar > .ant-btn { width: 100%; }
+}
+.filter-field-dates { flex-basis: 275px; }
+.filter-field > .filter-visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.management-key-search { justify-content: space-between; gap: 20px; padding: 15px 17px; background: #f8faff; border-color: #e3eaf7; }
+.key-search-label { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.key-search-icon { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; background: #eaf0fc; color: #4f6f9f; font-size: 16px; }
+.key-search-label label { display: block; font-size: 12px; color: #384d70; font-weight: 500; }
+.key-search-label div > span { display: block; margin-top: 3px; font-size: 11px; color: #66758b; }
+.key-search-controls { display: flex; gap: 8px; flex: 1; min-width: 0; max-width: 540px; }
+.key-search-controls .ant-input-affix-wrapper { max-width: none; min-width: 0; }
+.key-search-controls > .ant-btn { flex-shrink: 0; }
+.audit-action-tag { margin: 0; background: #f1f5fb; border-color: #e6ecf5; color: #496180; font-size: 11px; line-height: 23px; }
+.audit-time { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.table-identifier { color: #5b6b84; }
+
+/* License detail groups and nested sessions. */
+.drawer-loading { display: grid; place-items: center; min-height: 240px; }
+.license-summary-main { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.license-summary-main > div { min-width: 0; }
+.license-summary-key { display: block; margin: 2px 0 10px; font-size: 17px; font-weight: 600; letter-spacing: .3px; color: #294974; overflow-wrap: anywhere; }
+.license-summary > .ant-btn { flex-shrink: 0; }
+.license-section-heading { justify-content: flex-start; gap: 9px; }
+.license-section-heading > .anticon { color: #647b9e; font-size: 17px; }
+.license-section-heading .count-badge { margin-left: auto; }
+.license-descriptions .ant-descriptions-item-label { white-space: nowrap; }
+.binding-description { margin-top: -7px; }
+.device-policy > .section-heading { margin: 0 0 16px; }
+.device-policy > .form-note { margin: 16px 0 0; }
+.device-policy > .device-policy-actions { display: flex; margin-top: 16px; }
+.binding-card .ant-card-head { padding: 0 16px; min-height: 58px; }
+.binding-card .ant-card-body { padding: 16px; }
+.binding-title { display: flex; align-items: center; gap: 8px; min-width: 0; flex-wrap: wrap; padding: 12px 0; }
+.binding-title > .anticon { color: #647b9e; font-size: 17px; }
+.binding-title > span:not(.anticon):not(.ant-tag) { min-width: 0; overflow-wrap: anywhere; white-space: normal; font-size: 13px; }
+.binding-title .ant-tag { margin: 0; }
+.binding-timestamp { margin: 0 0 19px; font-size: 12px; }
+.sessions-heading { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; font-size: 12px; color: #4c5f7a; font-weight: 600; }
+.sessions-heading > span { font-size: 11px; font-weight: 400; color: #738098; }
+
+/* Issuance retains one transient plaintext result and its existing recovery flow. */
+.issuance-steps { display: flex; list-style: none; padding: 0 0 20px; margin: 0 0 21px; border-bottom: 1px solid #e8edf5; gap: 18px; }
+.issuance-steps > li { display: flex; align-items: center; gap: 9px; font-size: 12px; color: #65748b; flex: 1; }
+.issuance-steps > li:first-child::after { content: ''; height: 1px; background: #dce4f0; flex: 1; margin-left: 9px; }
+.issuance-steps > li > span { display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid #dde5f2; border-radius: 50%; font-size: 10px; color: #61738f; background: #f6f8fc; flex-shrink: 0; }
+.issuance-steps > .is-current { color: #285cc3; font-weight: 600; }
+.issuance-steps > .is-current > span { color: white; background: #2563eb; border-color: #2563eb; }
+.issuance-steps > .is-complete { color: #2c6e53; }
+.issuance-steps > .is-complete > span { color: #15803d; background: #edf8f2; border-color: #d2eadb; font-size: 14px; }
+.issuance-recovery .ant-alert-description p { margin: 10px 0; }
+.issuance-result-heading { display: flex; align-items: center; gap: 14px; margin: 2px 0 22px; }
+.issuance-success-icon { display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid #d8ede1; border-radius: 12px; background: #eff9f3; color: #208557; font-size: 25px; flex-shrink: 0; }
+.issuance-result-heading h3 { font-size: 19px; line-height: 1.5; margin: 0 0 5px; font-weight: 600; color: #234535; }
+.issuance-result-heading p { font-size: 12px; line-height: 1.7; color: #586579; margin: 0; }
+.issuance-batch { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 12px; margin-bottom: 17px; color: #68758b; font-size: 11px; }
+.issuance-batch code { color: #4e607a; }
+
+@media (max-width: 1023px) {
+  .audit-filter-bar .filter-field { flex-basis: calc(50% - 14px); }
+  .audit-filter-bar .filter-field-dates { flex-basis: 275px; }
+  .management-key-search { flex-wrap: wrap; gap: 13px; }
+  .key-search-controls { flex-basis: 100%; max-width: none; }
+}
+
+@media (max-width: 767px) {
+  .audit-date-popup.ant-picker-dropdown { position: fixed !important; inset: auto !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; max-width: calc(100vw - 24px); max-height: calc(100dvh - 32px); }
+  .audit-date-popup .ant-picker-panels { flex-direction: column; }
+  .audit-date-popup.ant-picker-dropdown .ant-picker-panel-container { max-width: calc(100vw - 24px); max-height: calc(100dvh - 48px); overflow-y: auto; }
+  .data-panel .panel-heading { align-items: flex-start; gap: 12px; }
+  .data-panel .panel-heading .panel-description { font-size: 11px; }
+  .management-filter-bar { gap: 14px 12px; }
+  .management-filter-bar .filter-field { flex: 1 1 100%; }
+  .filter-actions { width: 100%; }
+  .filter-actions > .ant-btn { flex: 1; }
+  .management-key-search { padding: 13px; }
+  .key-search-controls { width: 100%; }
+  .filter-field .ant-picker-range { min-width: 0; }
+  .filter-field .ant-picker-input { min-width: 0; }
+  .license-summary-key { font-size: 15px; }
+  .license-summary > .ant-btn { width: 100%; }
+  .application-summary { flex-wrap: nowrap; }
+  .application-summary .application-icon { width: 40px; height: 40px; }
+  .license-descriptions .ant-descriptions-item-label { width: 100px; }
+  .binding-card .ant-card-head { padding-inline: 12px; }
+  .binding-card .ant-card-body { padding: 12px; }
+  .binding-card .ant-card-head-wrapper { flex-wrap: wrap; padding: 4px 0 12px; gap: 0 12px; }
+  .binding-card .ant-card-head-title { flex: 1 1 100%; }
+  .issuance-steps { gap: 12px; }
+  .issuance-steps > li { gap: 7px; }
+  .issuance-result-heading { align-items: flex-start; gap: 12px; }
+  .issuance-result-heading h3 { font-size: 17px; }
+  .data-panel .panel-heading > .ant-btn,
+  .filter-actions .ant-btn, .key-search-controls .ant-btn,
+  .ant-drawer .ant-btn:not(.ant-btn-link), .ant-modal .ant-btn,
+  .filter-field .ant-select-selector, .filter-field > .ant-input-affix-wrapper,
+  .filter-field > .ant-picker { min-height: 44px; }
+  .filter-field .ant-select-single { height: 44px; }
+  .ant-modal .ant-form-item-control-input .ant-input-number,
+  .ant-modal .ant-form-item-control-input .ant-select-single { min-height: 44px; }
+  .ant-modal .ant-input-number-input { height: 42px; }
+}

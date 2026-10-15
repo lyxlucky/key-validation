@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "mode": "online",
+  "apiUrl": "http://127.0.0.1:5080",
+  "appCode": "your-app-code",
+  "clientVersion": "2.1.0",
+  "deviceId": "replace-with-your-stable-test-device-id",
+  "deviceLabel": "Windows 手动测试设备",
+  "licenseKey": "REPLACE-WITH-A-TEST-LICENSE-KEY",
+  "offlineLicensePath": null,
+  "trustedKeysPath": null
+}

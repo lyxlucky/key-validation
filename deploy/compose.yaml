@@ -1,0 +1,80 @@
+name: key-validation
+
+services:
+  database:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-key_validation}
+      POSTGRES_USER: ${POSTGRES_USER:-keyvalidation}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+    networks: [internal]
+
+  api:
+    build:
+      context: ..
+      dockerfile: deploy/backend.Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      DeveloperMcp__AllowedHosts__0: ${MCP_ALLOWED_HOST:?Set MCP_ALLOWED_HOST to the public hostname}
+      DeveloperMcp__AllowedHosts__1: ${MCP_ALLOWED_HOST:?Set MCP_ALLOWED_HOST}
+      DeveloperMcp__AllowedHosts__2: ${MCP_ALLOWED_HOST:?Set MCP_ALLOWED_HOST}
+      DeveloperMcp__AllowedOrigins__0: ${MCP_ALLOWED_ORIGIN:?Set MCP_ALLOWED_ORIGIN to the public HTTPS origin}
+      ConnectionStrings__Database: Host=database;Database=${POSTGRES_DB:-key_validation};Username=${POSTGRES_USER:-keyvalidation};Password=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      Licensing__CurrentKeyVersion: v1
+      Licensing__Keys__v1: ${LICENSING_KEY_V1:?Set LICENSING_KEY_V1}
+      DataProtection__Path: /app/keys
+      Backup__Path: ${BACKUP_PATH:-}
+      Backup__EncryptionKey: ${BACKUP_ENCRYPTION_KEY:-}
+      Backup__PostgresBinPath: /usr/lib/postgresql/17/bin
+      Backup__Enabled: ${BACKUP_ENABLED:-false}
+      Backup__IntervalHours: ${BACKUP_INTERVAL_HOURS:-24}
+      Backup__RetentionCount: ${BACKUP_RETENTION_COUNT:-7}
+      Backup__MaxArchiveBytes: ${BACKUP_MAX_ARCHIVE_BYTES:-268435456}
+      Webhooks__AllowedHosts__0: ${WEBHOOK_ALLOWED_HOST:-}
+      Webhooks__AllowLoopbackHttp: "false"
+      # Only the frontend's fixed internal address may supply forwarded headers.
+      Proxy__KnownProxies__0: 172.30.88.10
+    volumes:
+      - protection-keys:/app/keys
+      - backup-archives:/app/backups
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+    networks: [internal]
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: deploy/frontend.Dockerfile
+    ports:
+      - "80:80"
+      - "${HTTPS_PORT:-443}:443"
+    volumes:
+      - ${TLS_CERT_PATH:?Set TLS_CERT_PATH}:/etc/nginx/tls/fullchain.pem:ro
+      - ${TLS_KEY_PATH:?Set TLS_KEY_PATH}:/etc/nginx/tls/privkey.pem:ro
+    depends_on: [api]
+    restart: unless-stopped
+    networks:
+      internal:
+        ipv4_address: 172.30.88.10
+
+volumes:
+  postgres-data:
+  protection-keys:
+  backup-archives:
+
+networks:
+  internal:
+    ipam:
+      config:
+        - subnet: 172.30.88.0/24

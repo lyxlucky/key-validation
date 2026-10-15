@@ -1,0 +1,6 @@
+{
+  "applicationName": "KeyGate 授权客户端",
+  "apiUrl": "http://127.0.0.1:5080",
+  "appCode": "keygate-desktop-client",
+  "clientVersion": "1.0.0"
+}

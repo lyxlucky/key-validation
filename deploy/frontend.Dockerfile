@@ -1,0 +1,12 @@
+FROM node:22-alpine AS build
+WORKDIR /app
+COPY frontend/package*.json ./
+COPY frontend/scripts/ ./scripts/
+RUN npm ci
+COPY frontend/ ./
+RUN npm run build
+
+FROM nginx:stable-alpine
+COPY --from=build /app/dist/ /usr/share/nginx/html/
+COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80 443

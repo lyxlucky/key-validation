@@ -1,0 +1,276 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{05D52581-18E8-7ADC-C9F0-5E4EA7E63AD7}|src\\KeyValidation.Infrastructure\\KeyValidation.Infrastructure.csproj|d:\\vscodeworkspace\\key-validation\\backend\\src\\keyvalidation.infrastructure\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{05D52581-18E8-7ADC-C9F0-5E4EA7E63AD7}|src\\KeyValidation.Infrastructure\\KeyValidation.Infrastructure.csproj|solutionrelative:src\\keyvalidation.infrastructure\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{48A629C3-DFE2-29E9-FFCE-1AFB0488CF93}|src\\KeyValidation.Domain\\KeyValidation.Domain.csproj|d:\\vscodeworkspace\\key-validation\\backend\\src\\keyvalidation.domain\\records.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{48A629C3-DFE2-29E9-FFCE-1AFB0488CF93}|src\\KeyValidation.Domain\\KeyValidation.Domain.csproj|solutionrelative:src\\keyvalidation.domain\\records.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{48A629C3-DFE2-29E9-FFCE-1AFB0488CF93}|src\\KeyValidation.Domain\\KeyValidation.Domain.csproj|d:\\vscodeworkspace\\key-validation\\backend\\src\\keyvalidation.domain\\license.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{48A629C3-DFE2-29E9-FFCE-1AFB0488CF93}|src\\KeyValidation.Domain\\KeyValidation.Domain.csproj|solutionrelative:src\\keyvalidation.domain\\license.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{48A629C3-DFE2-29E9-FFCE-1AFB0488CF93}|src\\KeyValidation.Domain\\KeyValidation.Domain.csproj|d:\\vscodeworkspace\\key-validation\\backend\\src\\keyvalidation.domain\\keyvalidation.domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{48A629C3-DFE2-29E9-FFCE-1AFB0488CF93}|src\\KeyValidation.Domain\\KeyValidation.Domain.csproj|solutionrelative:src\\keyvalidation.domain\\keyvalidation.domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{68B12CCE-6F86-E925-DBBF-E3C980A8F70B}|src\\KeyValidation.Application\\KeyValidation.Application.csproj|d:\\vscodeworkspace\\key-validation\\backend\\src\\keyvalidation.application\\applicationcode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{68B12CCE-6F86-E925-DBBF-E3C980A8F70B}|src\\KeyValidation.Application\\KeyValidation.Application.csproj|solutionrelative:src\\keyvalidation.application\\applicationcode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{68B12CCE-6F86-E925-DBBF-E3C980A8F70B}|src\\KeyValidation.Application\\KeyValidation.Application.csproj|d:\\vscodeworkspace\\key-validation\\backend\\src\\keyvalidation.application\\contracts.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{68B12CCE-6F86-E925-DBBF-E3C980A8F70B}|src\\KeyValidation.Application\\KeyValidation.Application.csproj|solutionrelative:src\\keyvalidation.application\\contracts.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{68B12CCE-6F86-E925-DBBF-E3C980A8F70B}|src\\KeyValidation.Application\\KeyValidation.Application.csproj|d:\\vscodeworkspace\\key-validation\\backend\\src\\keyvalidation.application\\ilicensingdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{68B12CCE-6F86-E925-DBBF-E3C980A8F70B}|src\\KeyValidation.Application\\KeyValidation.Application.csproj|solutionrelative:src\\keyvalidation.application\\ilicensingdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{68B12CCE-6F86-E925-DBBF-E3C980A8F70B}|src\\KeyValidation.Application\\KeyValidation.Application.csproj|d:\\vscodeworkspace\\key-validation\\backend\\src\\keyvalidation.application\\licensingqueries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{68B12CCE-6F86-E925-DBBF-E3C980A8F70B}|src\\KeyValidation.Application\\KeyValidation.Application.csproj|solutionrelative:src\\keyvalidation.application\\licensingqueries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58AA7E11-41DF-D822-AFD2-00FC9FB97FF5}|src\\KeyValidation.Api\\KeyValidation.Api.csproj|d:\\vscodeworkspace\\key-validation\\backend\\src\\keyvalidation.api\\endpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58AA7E11-41DF-D822-AFD2-00FC9FB97FF5}|src\\KeyValidation.Api\\KeyValidation.Api.csproj|solutionrelative:src\\keyvalidation.api\\endpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58AA7E11-41DF-D822-AFD2-00FC9FB97FF5}|src\\KeyValidation.Api\\KeyValidation.Api.csproj|d:\\vscodeworkspace\\key-validation\\backend\\src\\keyvalidation.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{58AA7E11-41DF-D822-AFD2-00FC9FB97FF5}|src\\KeyValidation.Api\\KeyValidation.Api.csproj|solutionrelative:src\\keyvalidation.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58AA7E11-41DF-D822-AFD2-00FC9FB97FF5}|src\\KeyValidation.Api\\KeyValidation.Api.csproj|d:\\vscodeworkspace\\key-validation\\backend\\src\\keyvalidation.api\\apierrors.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58AA7E11-41DF-D822-AFD2-00FC9FB97FF5}|src\\KeyValidation.Api\\KeyValidation.Api.csproj|solutionrelative:src\\keyvalidation.api\\apierrors.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58AA7E11-41DF-D822-AFD2-00FC9FB97FF5}|src\\KeyValidation.Api\\KeyValidation.Api.csproj|d:\\vscodeworkspace\\key-validation\\backend\\src\\keyvalidation.api\\admincli.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58AA7E11-41DF-D822-AFD2-00FC9FB97FF5}|src\\KeyValidation.Api\\KeyValidation.Api.csproj|solutionrelative:src\\keyvalidation.api\\admincli.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58AA7E11-41DF-D822-AFD2-00FC9FB97FF5}|src\\KeyValidation.Api\\KeyValidation.Api.csproj|d:\\vscodeworkspace\\key-validation\\backend\\src\\keyvalidation.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58AA7E11-41DF-D822-AFD2-00FC9FB97FF5}|src\\KeyValidation.Api\\KeyValidation.Api.csproj|solutionrelative:src\\keyvalidation.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58AA7E11-41DF-D822-AFD2-00FC9FB97FF5}|src\\KeyValidation.Api\\KeyValidation.Api.csproj|d:\\vscodeworkspace\\key-validation\\backend\\src\\keyvalidation.api\\activationadmission.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58AA7E11-41DF-D822-AFD2-00FC9FB97FF5}|src\\KeyValidation.Api\\KeyValidation.Api.csproj|solutionrelative:src\\keyvalidation.api\\activationadmission.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 10,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Records.cs",
+              "DocumentMoniker": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Domain\\Records.cs",
+              "RelativeDocumentMoniker": "src\\KeyValidation.Domain\\Records.cs",
+              "ToolTip": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Domain\\Records.cs",
+              "RelativeToolTip": "src\\KeyValidation.Domain\\Records.cs",
+              "ViewState": "AgIAACcAAAAAAAAAAIBAwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-05T09:07:09.535Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "License.cs",
+              "DocumentMoniker": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Domain\\License.cs",
+              "RelativeDocumentMoniker": "src\\KeyValidation.Domain\\License.cs",
+              "ToolTip": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Domain\\License.cs",
+              "RelativeToolTip": "src\\KeyValidation.Domain\\License.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-05T09:07:04.038Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "KeyValidation.Domain",
+              "DocumentMoniker": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Domain\\KeyValidation.Domain.csproj",
+              "RelativeDocumentMoniker": "src\\KeyValidation.Domain\\KeyValidation.Domain.csproj",
+              "ToolTip": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Domain\\KeyValidation.Domain.csproj",
+              "RelativeToolTip": "src\\KeyValidation.Domain\\KeyValidation.Domain.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-10-05T09:07:02.122Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ApplicationCode.cs",
+              "DocumentMoniker": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Application\\ApplicationCode.cs",
+              "RelativeDocumentMoniker": "src\\KeyValidation.Application\\ApplicationCode.cs",
+              "ToolTip": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Application\\ApplicationCode.cs",
+              "RelativeToolTip": "src\\KeyValidation.Application\\ApplicationCode.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-05T09:07:00.451Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Contracts.cs",
+              "DocumentMoniker": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Application\\Contracts.cs",
+              "RelativeDocumentMoniker": "src\\KeyValidation.Application\\Contracts.cs",
+              "ToolTip": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Application\\Contracts.cs",
+              "RelativeToolTip": "src\\KeyValidation.Application\\Contracts.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-05T09:06:57.251Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ILicensingData.cs",
+              "DocumentMoniker": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Application\\ILicensingData.cs",
+              "RelativeDocumentMoniker": "src\\KeyValidation.Application\\ILicensingData.cs",
+              "ToolTip": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Application\\ILicensingData.cs",
+              "RelativeToolTip": "src\\KeyValidation.Application\\ILicensingData.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-05T09:06:56.276Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "LicensingQueries.cs",
+              "DocumentMoniker": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Application\\LicensingQueries.cs",
+              "RelativeDocumentMoniker": "src\\KeyValidation.Application\\LicensingQueries.cs",
+              "ToolTip": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Application\\LicensingQueries.cs",
+              "RelativeToolTip": "src\\KeyValidation.Application\\LicensingQueries.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAowBYAAABrAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-05T09:06:49.955Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Endpoints.cs",
+              "DocumentMoniker": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Api\\Endpoints.cs",
+              "RelativeDocumentMoniker": "src\\KeyValidation.Api\\Endpoints.cs",
+              "ToolTip": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Api\\Endpoints.cs",
+              "RelativeToolTip": "src\\KeyValidation.Api\\Endpoints.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAADwvycAAACiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-05T09:05:47.396Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Api\\appsettings.json",
+              "RelativeDocumentMoniker": "src\\KeyValidation.Api\\appsettings.json",
+              "ToolTip": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Api\\appsettings.json",
+              "RelativeToolTip": "src\\KeyValidation.Api\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-10-05T09:05:44.882Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Infrastructure\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "src\\KeyValidation.Infrastructure\\AppDbContext.cs",
+              "ToolTip": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Infrastructure\\AppDbContext.cs",
+              "RelativeToolTip": "src\\KeyValidation.Infrastructure\\AppDbContext.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAADwvyEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-05T09:04:20.176Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{c6f34f0d-7ae5-4f3a-be61-fe0c21ae9eb8}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Api\\Program.cs",
+              "RelativeDocumentMoniker": "src\\KeyValidation.Api\\Program.cs",
+              "ToolTip": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Api\\Program.cs",
+              "RelativeToolTip": "src\\KeyValidation.Api\\Program.cs",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAAAFIAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-05T09:02:08.152Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ApiErrors.cs",
+              "DocumentMoniker": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Api\\ApiErrors.cs",
+              "RelativeDocumentMoniker": "src\\KeyValidation.Api\\ApiErrors.cs",
+              "ToolTip": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Api\\ApiErrors.cs",
+              "RelativeToolTip": "src\\KeyValidation.Api\\ApiErrors.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAB2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-05T09:02:06.828Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "AdminCli.cs",
+              "DocumentMoniker": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Api\\AdminCli.cs",
+              "RelativeDocumentMoniker": "src\\KeyValidation.Api\\AdminCli.cs",
+              "ToolTip": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Api\\AdminCli.cs",
+              "RelativeToolTip": "src\\KeyValidation.Api\\AdminCli.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADUAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-05T09:01:58.532Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "ActivationAdmission.cs",
+              "DocumentMoniker": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Api\\ActivationAdmission.cs",
+              "RelativeDocumentMoniker": "src\\KeyValidation.Api\\ActivationAdmission.cs",
+              "ToolTip": "D:\\VSCODEWORKSPACE\\key-validation\\backend\\src\\KeyValidation.Api\\ActivationAdmission.cs",
+              "RelativeToolTip": "src\\KeyValidation.Api\\ActivationAdmission.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAABgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-05T09:01:51.716Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+.security-page { max-width: 1180px; margin-inline: auto; }
+.security-summary { display: flex; align-items: center; gap: 20px; padding: 26px 28px; margin-bottom: 24px; border: 1px solid #dce6f3; border-radius: 14px; background: #eff4fb; }
+.security-summary-icon { display: grid; place-items: center; flex: 0 0 62px; height: 66px; border: 1px solid #d2e0f6; border-radius: 16px; background: #fff; color: var(--blue); font-size: 30px; }
+.security-summary-copy { min-width: 0; flex: 1; }
+.security-eyebrow { display: block; margin-bottom: 7px; color: #516b90; font-size: 11px; font-weight: 500; }
+.security-summary h2 { margin: 0 0 8px; color: #213752; font-size: 21px; line-height: 1.4; font-weight: 650; letter-spacing: -.4px; }
+.security-summary-copy p { margin: 0; color: #53657d; font-size: 12px; line-height: 1.8; }
+.security-summary.is-protected { background: #edf6f3; border-color: #d6e8e0; }
+.security-summary.is-protected .security-summary-icon { border-color: #cee6db; color: #20805b; }
+.security-summary.is-protected .security-eyebrow { color: #426f5f; }
+.security-account { display: flex; align-items: center; gap: 10px; max-width: 220px; padding: 6px 0 6px 22px; border-left: 1px solid #d3deec; }
+.security-account > .anticon { flex-shrink: 0; padding: 10px; color: #557092; border-radius: 50%; background: #ffffffb3; font-size: 16px; }
+.security-account > div { min-width: 0; }
+.security-account span:not(.anticon) { color: #586a80; font-size: 11px; }
+.security-account strong { display: block; margin-top: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #334863; font-size: 12px; font-weight: 600; }
+.security-layout { display: grid; grid-template-columns: minmax(0, 1fr) 268px; gap: 22px; align-items: start; }
+.security-settings, .security-guide { min-width: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.security-section-heading { padding: 23px 26px 20px; border-bottom: 1px solid var(--line); }
+.security-section-heading h2 { margin: 0 0 7px; font-size: 15px; font-weight: 600; }
+.security-section-heading p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+.security-setting { display: flex; align-items: center; gap: 16px; margin: 0 26px; padding: 27px 0; }
+.security-setting + .security-setting { border-top: 1px solid #edf0f5; }
+.security-setting-icon { display: grid; place-items: center; flex: 0 0 42px; height: 44px; border: 1px solid #e5eaf1; border-radius: 11px; background: #f8fafc; color: #607088; font-size: 19px; }
+.security-setting-icon.is-blue { border-color: #dfe9fa; background: #f0f5ff; color: var(--blue); }
+.security-setting-copy { min-width: 0; flex: 1; }
+.security-setting-title { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; margin-bottom: 8px; }
+.security-setting-title h3 { margin: 0; font-size: 14px; font-weight: 600; }
+.security-setting-title .ant-tag { margin: 0; font-size: 10px; line-height: 20px; }
+.security-setting-copy > p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+.security-setting-action.ant-btn { flex-shrink: 0; min-width: 110px; height: 34px; padding-inline: 13px; font-size: 12px; box-shadow: none; }
+.security-setting-action.ant-btn-dangerous:not(:hover) { border-color: #e1e6ee; color: #a54c4c; }
+.security-code-count { padding: 1px 8px; border-radius: 5px; background: #edf5f1; color: #326d52; font-size: 11px; line-height: 20px; }
+.security-code-count strong { font-weight: 600; }
+.security-code-count.is-empty { color: #9a6616; background: #fff6e5; }
+.security-settings-footer { display: flex; align-items: center; gap: 8px; padding: 14px 26px; border-top: 1px solid #edf0f5; border-radius: 0 0 12px 12px; background: #fafbfd; color: #68768b; font-size: 11px; }
+.security-guide { padding: 23px 22px 0; }
+.security-guide-heading { display: flex; align-items: center; gap: 8px; }
+.security-guide-heading > .anticon { color: #69809d; font-size: 16px; }
+.security-guide-heading h2 { margin: 0; color: #34475f; font-size: 13px; font-weight: 600; }
+.security-login-steps { list-style: none; margin: 25px 0 0; padding: 0; }
+.security-login-steps li { display: flex; position: relative; gap: 11px; padding-bottom: 24px; }
+.security-login-steps li:not(:last-child)::after { content: ''; position: absolute; top: 27px; bottom: 4px; left: 12px; width: 1px; background: #e4eaf2; }
+.security-login-steps li > span { display: grid; place-items: center; flex: 0 0 25px; height: 25px; border: 1px solid #dfe7f1; border-radius: 50%; background: #f5f8fc; color: #607693; font-size: 11px; font-weight: 600; }
+.security-login-steps h3 { margin: 3px 0 7px; color: #40536c; font-size: 12px; font-weight: 600; }
+.security-login-steps p { margin: 0; color: #69778b; font-size: 11px; line-height: 1.8; }
+.security-guide-note { display: flex; align-items: start; gap: 8px; padding: 15px 0 18px; border-top: 1px solid #edf0f5; color: #66778e; font-size: 11px; }
+.security-guide-note > .anticon { margin-top: 3px; }
+.security-guide-note p { margin: 0; line-height: 1.7; }
+.security-dialog-description { margin: 12px 0 22px; color: var(--muted); font-size: 13px; line-height: 1.8; }
+.security-setup-steps { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; padding: 13px 16px; background: #f7f9fc; border-radius: 8px; }
+.security-setup-steps > span { display: flex; align-items: center; gap: 8px; color: #586579; font-size: 12px; }
+.security-setup-steps b { display: grid; place-items: center; width: 23px; height: 23px; border-radius: 50%; background: #e9edf3; font-size: 11px; }
+.security-setup-steps .is-current { color: #245bcc; font-weight: 500; }
+.security-setup-steps .is-current b { background: var(--blue); color: #fff; }
+.security-setup-steps .is-complete { color: #34715b; }
+.security-setup-steps .is-complete b { background: #e5f0eb; }
+.security-setup-steps i { flex: 1; height: 1px; background: #dee5ef; }
+.authenticator-setup { display: flex; align-items: center; gap: 22px; margin-bottom: 24px; padding: 18px; border: 1px solid var(--line); border-radius: 10px; background: #fafbfd; }
+.authenticator-setup > .ant-qrcode { flex-shrink: 0; background: #fff; }
+.authenticator-setup > div:not(.ant-qrcode) { min-width: 0; }
+.authenticator-setup p { margin: 0 0 10px; color: #53657e; font-size: 12px; line-height: 1.7; }
+.authenticator-setup code { display: block; padding: 10px; border: 1px solid #e4eaf2; border-radius: 6px; background: #fff; color: #364b69; max-width: 100%; line-height: 1.7; }
+.authenticator-setup span { display: block; margin-top: 10px; color: #69778b; font-size: 11px; line-height: 1.7; }
+.security-totp-input { letter-spacing: 5px; font-size: 18px; font-variant-numeric: tabular-nums; }
+.security-totp-input::placeholder { letter-spacing: 0; font-size: 13px; }
+.recovery-codes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.recovery-codes code { padding: 10px; border: 1px solid #e2e8f1; background: #f7f9fc; border-radius: 6px; color: #384c68; font-size: 11px; text-align: center; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.device-policy { border-top: 1px solid #e4e9f1; margin-top: 24px; padding-top: 16px; }
+@media (max-width: 1199px) {
+  .security-layout { grid-template-columns: minmax(0, 1fr); }
+  .security-guide { padding-bottom: 0; }
+  .security-login-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 20px; }
+  .security-login-steps li::after { display: none; }
+}
+@media (max-width: 767px) {
+  .security-summary { flex-wrap: wrap; gap: 14px; padding: 20px; margin-bottom: 18px; }
+  .security-summary-icon { flex-basis: 46px; height: 50px; border-radius: 12px; font-size: 24px; }
+  .security-summary h2 { font-size: 18px; }
+  .security-account { width: 100%; max-width: none; padding: 14px 0 0; border-left: 0; border-top: 1px solid #d9e2ed; }
+  .security-account > .anticon { padding: 7px; font-size: 13px; }
+  .security-account > div { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .security-account strong { margin-top: 0; }
+  .security-layout { gap: 18px; }
+  .security-section-heading { padding: 20px; }
+  .security-setting { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 12px; margin-inline: 20px; padding-block: 22px; }
+  .security-setting-icon { width: 38px; height: 40px; font-size: 18px; align-self: start; }
+  .security-setting-action.ant-btn { grid-column: 2; justify-self: start; min-height: 44px; padding-inline: 16px; }
+  .security-settings-footer { padding-inline: 20px; }
+  .security-guide { padding-inline: 20px; }
+  .security-login-steps { display: block; }
+  .security-login-steps li:not(:last-child)::after { display: block; }
+}
+@media (max-width: 575px) {
+  .authenticator-setup { flex-direction: column; gap: 14px; padding: 16px; text-align: center; }
+  .authenticator-setup > div:not(.ant-qrcode) { width: 100%; }
+  .recovery-codes { grid-template-columns: minmax(0, 1fr); }
+  .recovery-codes code { padding-block: 8px; }
+  .security-dialog .ant-modal-footer .ant-btn { min-height: 44px; }
+}

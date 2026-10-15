@@ -1,0 +1,8 @@
+.policy-section { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border-color, #e4e9f1); }
+.policy-section .section-heading { margin: 0 0 8px; }
+.policy-section .panel-heading { align-items: flex-start; }
+.policy-section .ant-descriptions-item-content { min-width: 0; }
+.policy-editor-modal.ant-modal { top: 24px; padding-bottom: 24px; }
+.policy-editor-modal .ant-modal-container { display: flex; flex-direction: column; max-height: calc(100dvh - 72px); }
+.policy-editor-modal .ant-modal-header, .policy-editor-modal .ant-modal-footer { flex-shrink: 0; }
+.policy-editor-modal .ant-modal-body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }

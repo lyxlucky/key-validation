@@ -1,0 +1,73 @@
+import { test, expect } from '@playwright/test';
+import { randomUUID } from 'node:crypto';
+import { catalog } from './roadmap-helpers';
+
+test.use({ trace: 'off', screenshot: 'off' });
+test.afterEach(async ({ page }) => { if (!page.isClosed()) await page.goto('about:blank'); });
+
+test('customer renewal approval extends once and access-code rotation ends the old portal session', async ({ page }) => {
+  test.setTimeout(120000);
+  const { app, plan, headers } = await catalog(page, 1);
+  const suffix = randomUUID().slice(0, 8);
+  const name = `续期客户-${suffix}`;
+  const customerResponse = await page.request.post('/api/admin/customers', { headers, data: { applicationId: app.id, name } });
+  expect(customerResponse.status()).toBe(201);
+  const customer = await customerResponse.json();
+  const access = await (await page.request.post(`/api/admin/customers/${customer.id}/rotate-access-code`, { headers })).json();
+  const orderResponse = await page.request.post('/api/admin/orders', { headers, data: { requestId: randomUUID(), applicationId: app.id, customerId: customer.id, planId: plan.id, type: 'issue', quantity: 1, unitPriceCents: 1000 } });
+  expect(orderResponse.status()).toBe(201);
+  const order = await orderResponse.json();
+  expect((await page.request.post(`/api/admin/orders/${order.id}/fulfill`, { headers, data: { requestId: randomUUID() } })).ok()).toBe(true);
+  const delivery = await (await page.request.get(`/api/admin/orders/${order.id}/delivery`)).json();
+  const licenseId = delivery.licenses[0].id;
+  const activated = await page.request.post('/api/client/licenses/activate', { data: { appCode: app.code, licenseKey: delivery.licenses[0].key, deviceId: randomUUID(), deviceLabel: '续期验收设备' } });
+  expect(activated.status()).toBe(200);
+  const grant = await activated.json();
+
+  await page.goto('/portal');
+  await page.getByLabel('客户访问码', { exact: true }).fill(access.accessCode);
+  await page.getByRole('button', { name: '进入自助服务', exact: true }).click();
+  await expect(page.getByRole('heading', { name, exact: true })).toBeVisible();
+  await page.getByRole('tab', { name: '我的授权', exact: true }).click();
+  await page.getByRole('row').filter({ hasText: '有效' }).getByRole('button', { name: '详情', exact: true }).click();
+  const license = page.getByRole('dialog', { name: '我的授权详情', exact: true });
+  await license.getByRole('button', { name: '申请续期', exact: true }).click();
+  const request = page.getByRole('dialog', { name: '申请续期', exact: true });
+  const note = `再续两个小时-${suffix}`;
+  await request.getByLabel('申请原因', { exact: true }).fill(note);
+  await request.getByRole('button', { name: '提交申请', exact: true }).click();
+  await expect(request).toBeHidden();
+  await license.getByRole('button', { name: '关闭', exact: true }).click();
+  await page.getByRole('tab', { name: '我的申请', exact: true }).click();
+  await expect(page.getByRole('row').filter({ hasText: note })).toContainText('待商家处理');
+
+  await page.goto('/portal-requests');
+  await page.getByRole('row').filter({ hasText: note }).getByRole('button', { name: '审批', exact: true }).click();
+  const review = page.getByRole('dialog', { name: '审批客户申请', exact: true });
+  await review.getByRole('radio', { name: '批准申请', exact: true }).check();
+  await review.getByLabel('续期卡种', { exact: true }).fill(plan.name);
+  await page.getByTitle(plan.name, { exact: true }).click();
+  await review.getByLabel('续期时长（小时）', { exact: true }).fill('2');
+  await review.getByLabel('单价（分）', { exact: true }).fill('500');
+  await review.getByLabel('审批原因', { exact: true }).fill('已核对本次续期需求');
+  await review.getByRole('button', { name: '保存审批', exact: true }).click();
+  await expect(review).toBeHidden();
+  const renewed = await (await page.request.get(`/api/admin/licenses/${licenseId}`)).json();
+  expect(Date.parse(renewed.license.expiresAt) - Date.parse(grant.expiresAt)).toBe(7200000);
+  const orders = await (await page.request.get(`/api/admin/orders?customerId=${customer.id}`)).json();
+  const renewals = orders.items.filter((item: { type: string }) => item.type === 'renewal');
+  expect(renewals).toHaveLength(1);
+  expect(renewals[0].status).toBe('fulfilled');
+  expect(renewals[0].totalCents).toBe(500);
+  await page.goto('/portal/requests');
+  await expect(page.getByRole('row').filter({ hasText: note })).toContainText('已批准');
+
+  const rotated = await (await page.request.post(`/api/admin/customers/${customer.id}/rotate-access-code`, { headers })).json();
+  await page.reload();
+  await expect(page.getByRole('heading', { name: '客户自助', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name, exact: true })).toHaveCount(0);
+  expect((await page.request.post('/api/portal/sessions', { data: { accessCode: access.accessCode } })).status()).toBe(401);
+  await page.getByLabel('客户访问码', { exact: true }).fill(rotated.accessCode);
+  await page.getByRole('button', { name: '进入自助服务', exact: true }).click();
+  await expect(page.getByRole('heading', { name, exact: true })).toBeVisible();
+});
